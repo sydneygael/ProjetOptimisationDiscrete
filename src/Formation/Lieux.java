@@ -10,11 +10,11 @@ package Formation;
  * @author Corentin
  */
 public abstract class Lieux {
-    private String id;
-    private String nom;
-    private String codePostal;
-    private double latitude;
-    private double longitude;
+    protected String id;
+    protected String nom;
+    protected String codePostal;
+    protected double latitude;
+    protected double longitude;
     
     public Lieux(String id,String nom, String codepostal, double latitude, double longitude){
         this.id=id;
@@ -44,51 +44,56 @@ public abstract class Lieux {
     public double getLatitude() {
         return latitude;
     }
+    
+    
+    /**
+	 * permettra de comparer si deux lieux sont les mêmes
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof CentreFormation)) {
+			return false;
+		}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof Agence)) {
-            return false;
-        }
-        Agence agence2 = (Agence) obj;
-        if (id == null) {
-            if (agence2.getId() != null) {
-                return false;
-            }
-        } else if (!id.equals(agence2.getId())) {
-            return false;
-        }
-        if (latitude !=agence2.getLatitude()) {
-            return false;
-        }
-        if (longitude!=agence2.getLongitude()) {
-            return false;
-        }
-        if (nom == null) {
-            if (agence2.getNom() != null) {
-                return false;
-            }
-        } else if (!nom.equals(agence2.getNom())) {
-            return false;
-        }
-        if (codePostal == null) {
-            if (agence2.getCodePostal() != null) {
-                return false;
-            }
-        } else if (!codePostal.equals(agence2.getCodePostal())) {
-            return false;
-        }
-        return true;
-    }
-    
-    
-    
+		CentreFormation autreCentre = (CentreFormation) obj;
+		if (id == null) {
+			if (autreCentre.id != null) {
+				return false;
+			}
+
+		} else if (!id.equals(autreCentre.id)) {
+			return false;
+		}
+		if (Double.compare(latitude, autreCentre.latitude) != 0) {
+			return false;
+		}
+		if (Double.compare(longitude, autreCentre.longitude) != 0) {
+			return false;
+		}
+
+		if (nom == null) {
+			if (autreCentre.nom != null) {
+				return false;
+			}
+		} else if (!nom.equals(autreCentre.nom)) {
+			return false;
+		}
+		if (codePostal == null) {
+			if (autreCentre.codePostal != null) {
+				return false;
+			}
+		} else if (!codePostal.equals(autreCentre.codePostal)) {
+			return false;
+		}
+		return true;
+	}
+
     public double distance(Lieux lieu2){
         double lat1=this.latitude;
         double lat2=lieu2.latitude;

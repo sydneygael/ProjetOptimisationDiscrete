@@ -13,14 +13,14 @@ import java.util.List;
  * @author Corentin
  */
 public class CentreFormation extends Lieux{
-    
-    private List<Employe> listeEmploye;
-    
-    public CentreFormation(String id,String nom, String codepostal, double latitude, double longitude){
-        super(id,nom,codepostal,latitude,longitude);
-        listeEmploye=new ArrayList();
-    }
-    
-    
-    
+
+	private List<Employe> listeEmployes;
+	private int nbEmp;
+
+	public CentreFormation(String id,String nom, String codepostal, double latitude, double longitude){
+		super(id,nom,codepostal,latitude,longitude);
+		listeEmployes=new ArrayList<Employe>();
+	}
+
+
 }

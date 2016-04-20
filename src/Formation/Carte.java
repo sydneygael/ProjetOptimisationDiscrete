@@ -46,9 +46,9 @@ public class Carte  {
         String codePostal = splitedLine[2].substring(1, splitedLine[2].length() - 1);
         float longitude = Float.parseFloat(splitedLine[3]);
         float latitude = Float.parseFloat(splitedLine[4]);
-        int nbPersons = Integer.parseInt(splitedLine[5]);
+        int nbPersonnes = Integer.parseInt(splitedLine[5]);
         System.out.println(name);
-        return new Agence(id, name, codePostal, longitude, latitude, nbPersons);
+        return new Agence(id, name, codePostal, longitude, latitude, nbPersonnes);
     }
     
     public void getCentreFormationFromFile(String fileName) throws IOException {
@@ -58,13 +58,13 @@ public class Carte  {
         file = new BufferedReader(new FileReader(fileName));
         line = file.readLine();
         
-        List<CentreFormation> listPlaces = new ArrayList<CentreFormation>();
+        List<CentreFormation> lieuxDeFormations = new ArrayList<CentreFormation>();
         
         while ((line = file.readLine()) != null) {
-            listPlaces.add(transformerCentreFormation(line));
+            lieuxDeFormations.add(transformerCentreFormation(line));
         }
         
-        this.lieuxFormation = listPlaces;
+        this.lieuxFormation = lieuxDeFormations;
         
         file.close();
     }
@@ -75,15 +75,15 @@ public class Carte  {
             throw new IOException("mauvais format");
         }
         String id = splitedLine[0].substring(1, splitedLine[0].length() - 1);
-        String name = splitedLine[1].substring(1, splitedLine[1].length() - 1);
-        String postalCode = splitedLine[2].substring(1, splitedLine[2].length() - 1);
+        String nom = splitedLine[1].substring(1, splitedLine[1].length() - 1);
+        String codePostale = splitedLine[2].substring(1, splitedLine[2].length() - 1);
         float longitude = Float.parseFloat(splitedLine[3]);
         float latitude = Float.parseFloat(splitedLine[4]);
         
-        System.out.println(name);
+        System.out.println(nom);
 
         
-        return new CentreFormation(id, name, postalCode, longitude, latitude);
+        return new CentreFormation(id, nom, codePostale, longitude, latitude);
     }
 
     public List<Agence> getListAgences() {

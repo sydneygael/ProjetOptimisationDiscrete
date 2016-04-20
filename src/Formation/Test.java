@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import Utils.Utilitaires;
+
 /**
  *
  * @author Corentin
@@ -27,9 +29,10 @@ public class Test {
         Carte carte1=new Carte();
         
         try {
-            carte1.getAgencesFromFile("Ressources/ListeAgences_100.txt");
+            /*carte1.getAgencesFromFile("Ressources/ListeAgences_100.txt");
             
-            carte1.getCentreFormationFromFile("Ressources/LieuxPossibles.txt");
+            carte1.getCentreFormationFromFile("Ressources/LieuxPossibles.txt");*/
+        	Utilitaires.premiereSolution();
         } catch (IOException ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
         }
