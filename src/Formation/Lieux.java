@@ -10,43 +10,51 @@ package Formation;
  * @author Corentin
  */
 public abstract class Lieux {
-    protected String id;
-    protected String nom;
-    protected String codePostal;
-    protected double latitude;
-    protected double longitude;
-    
-    public Lieux(String id,String nom, String codepostal, double latitude, double longitude){
-        this.id=id;
-        this.nom=nom;
-        this.codePostal=codepostal;
-        this.latitude=latitude;
-        this.longitude=longitude;
-    }
-    
-    
-    public String getId() {
-        return id;
-    }
 
-    public String getNom() {
-        return nom;
-    }
-    
-    public String getCodePostal() {
-        return codePostal;
-    }
+	protected static final double EARTH_RADIUS = 6371.0;
 
-    public double getLongitude() {
-        return longitude;
-    }
-    
-    public double getLatitude() {
-        return latitude;
-    }
-    
-    
-    /**
+	public static final int COUT_CENTRE = 2000;
+	public static final int COUT_RENTABILITE = 1000;
+	public static final int COUT_TOTAL = COUT_CENTRE + COUT_RENTABILITE;
+	public static final double COUT_EMP = 0.4;
+
+	protected String id;
+	protected String nom;
+	protected String codePostal;
+	protected double latitude;
+	protected double longitude;
+
+	public Lieux(String id,String nom, String codepostal, double latitude, double longitude){
+		this.id=id;
+		this.nom=nom;
+		this.codePostal=codepostal;
+		this.latitude=latitude;
+		this.longitude=longitude;
+	}
+
+
+	public String getId() {
+		return id;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public String getCodePostal() {
+		return codePostal;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+
+	/**
 	 * permettra de comparer si deux lieux sont les mêmes
 	 */
 	@Override
@@ -94,32 +102,26 @@ public abstract class Lieux {
 		return true;
 	}
 
-    public double distance(Lieux lieu2){
-        double lat1=this.latitude;
-        double lat2=lieu2.latitude;
-        double long1=this.longitude;
-        double long2=lieu2.longitude;
-                
-        double theta = long1 - long2;
-        double distance = Math.sin(deg2rad(lat1))
-                * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) 
-                * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-        distance = Math.acos(distance);
-        distance = rad2deg(distance);
-        distance = distance * 60 * 1.1515;
+	public double distance(Lieux lieu2){
 
-        System.out.print("La distance entre les deux ville est de " + distance + " km");
-        return distance;
-    }
-    
-    private static double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-    
-    private static double rad2deg(double rad) {
-        return (rad * 180 / Math.PI);
-    }
-            
+		double lat1=this.latitude;
+		double lat2=lieu2.latitude;
+		double long1=this.longitude;
+		double long2=lieu2.longitude;
+
+		double dLat = Math.toRadians(lat2-lat1);
+		double dLng = Math.toRadians(long2-long1);
+		double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+				Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+				Math.sin(dLng/2) * Math.sin(dLng/2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		double dist = EARTH_RADIUS * c;
+
+
+		System.out.println("La distance entre " + nom+ " et " + lieu2.nom + " est de "+ dist + " km");
+		return dist;
+	}
+
 }
 
-    
+

@@ -21,12 +21,6 @@ public class Test {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        CentreFormation centre1=new CentreFormation("peronnas","peronnas","01960",5.2,46.1833);
-        CentreFormation centre2=new CentreFormation("Oyonnax","Oyonnax","01100",5.66667,46.25);
-
-        System.out.println(centre1.distance(centre2));;
-    
-        Carte carte1=new Carte();
         
         try {
             /*carte1.getAgencesFromFile("Ressources/ListeAgences_100.txt");
