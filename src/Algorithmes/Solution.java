@@ -23,14 +23,15 @@ public class Solution {
 	}
 
 
-	public Solution genererVoisinage(int nombreDeVoisins) {
+	public List<Solution> genererVoisinage(int nombreDeVoisins) {
+		List<Solution> voisinage = new ArrayList<Solution>();
 
 		for ( int i=0 ; i < nombreDeVoisins ; i++) {
-
 			Solution s = ContruireVoisinAleatoire();
+			voisinage.add(s);
 		}
 
-		return null;
+		return voisinage;
 	}
 
 	/**
@@ -38,9 +39,13 @@ public class Solution {
 	 * @return
 	 */
 	private Solution ContruireVoisinAleatoire() {
+
+		Solution aleatoire = new Solution();
+		aleatoire.setDisposition(disposition);
+
 		int tailleCentre= disposition.keySet().size();
 
-		//on choisit une agence de la solution au hasard
+		//on choisit un centre de la solution au hasard
 		int indexCentre1= random.nextInt(tailleCentre);
 		List<Agence> sousAgences1 = getValueForEntry(indexCentre1);
 		//on en choisit une deuxieme
@@ -54,20 +59,28 @@ public class Solution {
 
 		Agence tmp1 = sousAgences1.get(indexVille1);
 		Agence tmp2 = sousAgences2.get(indexVille2);
-		setValueForEntry(indexCentre1,indexVille1,tmp2);
-		setValueForEntry(indexCentre2,indexVille2,tmp1);
+		aleatoire.echangerUneVille(indexCentre1,indexVille1,tmp2);
+		aleatoire.echangerUneVille(indexCentre2,indexVille2,tmp1);
 
-		return null;
+		//pour finir on calcul la nouvelle valeur de la fitness
+		aleatoire.calculerFitness();
+		return aleatoire;
 	}
 
 
-	private void setValueForEntry(int id, int indexVille , Agence newValue) {
+	/**
+	 * 
+	 * @param idCentreFormation
+	 * @param indexVille
+	 * @param newValue
+	 */
+	public void echangerUneVille(int idCentreFormation, int indexVille , Agence newValue) {
 
 		Iterator<Entry<CentreFormation, List<Agence>>> iterator = disposition.entrySet().iterator();
 		int n = 0;
 
 		while(iterator.hasNext()){
-			if(n == id){
+			if(n == idCentreFormation){
 				iterator.next().getValue().set(indexVille, newValue);
 			}
 			n ++;
@@ -92,7 +105,7 @@ public class Solution {
 		this.fitness = fitness;
 	}
 
-	private List<Agence> getValueForEntry(int id){
+	public List<Agence> getValueForEntry(int id){
 
 		Iterator<Entry<CentreFormation, List<Agence>>> iterator = disposition.entrySet().iterator();
 		int n = 0;
