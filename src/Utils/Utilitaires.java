@@ -24,7 +24,9 @@ public class Utilitaires {
 
 	private static List<CentreFormation> centresDeFormation;
 
-	private Random random = new Random();
+	private static Random random = new Random();
+
+	private static int randomIndex;
 
 	/**
 	 * construction de la première solution
@@ -68,9 +70,37 @@ public class Utilitaires {
 
 	}
 
-	public static Solution genererSolutionAleatoire() {
+	public static Solution genererSolutionAleatoire(String ressourceAgence) throws IOException {
 
-		return null;
+		//Solution une
+		Solution s1 = new Solution();
+
+		//la carte
+		carte =new Carte();
+		carte.getAgencesFromFile("Ressources/ListeAgences_100.txt");
+		carte.getCentreFormationFromFile("Ressources/LieuxPossibles.txt");
+		agences = carte.getListAgences();
+		centresDeFormation = carte.getListCentreFormation();
+
+		do {
+
+			randomIndex = random.nextInt(centresDeFormation.size());
+			CentreFormation centreAleatoire = centresDeFormation.remove(randomIndex);
+			System.out.println("-----------------------------------------");
+			System.out.println("Prise d'un centre du centre de formation "
+					+ centreAleatoire.getNom() + " id : "
+					+ centreAleatoire.getId());
+			System.out.println("-----------------------------------------");
+			System.out.println();
+			List<Agence> agencesSolution = chercherDisposition(centreAleatoire);
+			System.out.println("recherche et ajout de la disposition pour id : "
+					+ centreAleatoire.getId());
+			s1.ajouterUneDisposition(centreAleatoire, agencesSolution);
+		}
+		
+		while(!centresDeFormation.isEmpty() && !agences.isEmpty());
+
+		return s1;
 	}
 
 	public Random getRandom() {
@@ -78,7 +108,7 @@ public class Utilitaires {
 	}
 
 	public void setRandom(Random random) {
-		this.random = random;
+		Utilitaires.random = random;
 	}
 
 	public static <K, V extends Comparable<? super V>> Map<K, V> 
