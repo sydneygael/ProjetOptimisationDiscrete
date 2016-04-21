@@ -28,8 +28,19 @@ public class Test {
             /*carte1.getAgencesFromFile("Ressources/ListeAgences_100.txt");
             
             carte1.getCentreFormationFromFile("Ressources/LieuxPossibles.txt");*/
+        	System.out.println();
+        	System.out.println("-----------------------------------------");
+        	System.out.println("SOLUTION ALEATOIRE N° 1");
+        	System.out.println("-----------------------------------------");
+        	System.out.println();
         	Solution s = Utilitaires.genererSolutionAleatoire(null);
-        	List<Solution > l = s.genererVoisinage(4);
+        	System.out.println();
+        	System.out.println("-----------------------------------------");
+        	System.out.println("SOLUTION ALEATOIRE N° 2");
+        	System.out.println("-----------------------------------------");
+        	System.out.println();
+        	Solution s2 = Utilitaires.genererSolutionAleatoire(null);
+        	List<Solution > l = s.genererVoisinage(8,s2);
         	
         	for ( Solution sol : l ){
         		

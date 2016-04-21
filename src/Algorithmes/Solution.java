@@ -12,7 +12,11 @@ import java.util.List;
 import Formation.Agence;
 import Formation.CentreFormation;
 import Formation.Lieux;
-
+/**
+ * 
+ * @author Sydney
+ *
+ */
 public class Solution {
 
 	private Map<CentreFormation, List<Agence>> disposition;
@@ -27,7 +31,25 @@ public class Solution {
 		List<Solution> voisinage = new ArrayList<Solution>();
 
 		for ( int i=0 ; i < nombreDeVoisins ; i++) {
-			Solution s = ContruireVoisinAleatoire();
+			Solution s = contruireVoisinAleatoire();
+			
+			while (s.dispositionPossible()==false) {
+				s = contruireVoisinAleatoire();
+			}
+			voisinage.add(s);
+		}
+		return voisinage;
+	}
+	
+	public List<Solution> genererVoisinage(int nombreDeVoisins,Solution s2) {
+		List<Solution> voisinage = new ArrayList<Solution>();
+
+		for ( int i=0 ; i < nombreDeVoisins ; i++) {
+			Solution s = construireVoisinAleatoire(s2);
+			
+			while (s.dispositionPossible()==false) {
+				s = construireVoisinAleatoire(s2);
+			}
 			voisinage.add(s);
 		}
 		return voisinage;
@@ -63,9 +85,62 @@ public class Solution {
 		}
 		return null;
 	}
-	
-	public void echangerAgenceAvecSolution(List<Agence> l , CentreFormation c) {
-		
+
+	public boolean dispositionPossible () {
+
+		for ( Entry<CentreFormation, List<Agence>> entree : disposition.entrySet()) {
+
+			int cpt =0;
+			List<Agence> agences = entree.getValue();
+
+			for ( Agence a : agences ) {
+				cpt+=a.getNbEmploye();
+			}
+
+			if (cpt>60) return false;
+		}
+		return true;
+	} 
+	public Solution construireVoisinAleatoire(Solution s2) {
+
+		Solution alea = new Solution();
+
+		// tirage aléatoire
+		Random r = new Random();
+		int indexCentreSolution1 = r.nextInt(this.disposition.size());
+		int indexCentreSolution2 = r.nextInt(s2.getDisposition().size());
+
+		Map<Integer, Agence> coupleAgenceS1 = this.tirageAleatoireAgence(indexCentreSolution1);
+		Map<Integer, Agence> coupleAgenceS2 = s2.tirageAleatoireAgence(indexCentreSolution2);
+
+		CentreFormation c1=getCentreFormationFromMap(indexCentreSolution1);
+
+		List <Agence> l1 = this.disposition.get(c1);
+
+		int index1 = -1,index2= -1 ;
+		Agence agenceAleatoire = null;
+
+		// on récupère les valeurs du tirage
+		for (Entry<Integer, Agence> entry1 : coupleAgenceS1.entrySet() ) {
+			index1 = entry1.getKey();
+		}
+
+		for (Entry<Integer, Agence> entry2 : coupleAgenceS2.entrySet() ) {
+			index2 = entry2.getKey();
+			agenceAleatoire = entry2.getValue();
+		}
+
+		// on construit la nouvelle solution
+		if ( index1 != -1 && index2 != -1 && agenceAleatoire != null) {
+			l1.set(index1, agenceAleatoire);
+		}
+
+		alea.setDisposition(disposition);
+		alea.ajouterUneDisposition(c1, l1);
+		alea.calculerFitness();
+
+		return alea;
+
 	}
 
 	/**
@@ -114,7 +189,7 @@ public class Solution {
 	 * consiste à échanger des villes entre centres
 	 * @return
 	 */
-	private Solution ContruireVoisinAleatoire() {
+	private Solution contruireVoisinAleatoire() {
 
 		Random random = new Random();
 		Solution aleatoire = new Solution();
@@ -236,5 +311,6 @@ public class Solution {
 			return null;
 		}
 	}
+
 
 }
