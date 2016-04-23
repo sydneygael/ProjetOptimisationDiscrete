@@ -1,6 +1,8 @@
 package Algorithmes;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Random;
 
 import Utils.Utilitaires;
 
@@ -15,37 +17,15 @@ public class RecuitSimule {
 	private double delta;
 	private boolean accepter;
 	private Solution s ;
+	private Solution voisinAleatoire;
 	private double meilleurCout;
 	private Solution meilleurSolutionConnue;
 	private double nbIterationsSansChangementCout;
 	private double epsilon;
 	private int nbVoisins;
+	private Random r;
+	private List<Solution> solutionsVoisines ;
 	
-	/**
-	 * 
-	 * 	
-		
-	
-		Répéter
-		Tirer au sort une solution s’ dans V(s)
-		Calculer la variation de coût Δf
-		Si Δf < 0
-		Alors Accept := Vrai
-		Sinon
-		Tirer au sort p dans [0,1]
-		Accept := p ≤ exp(-Δf/T)
-		FS
-		Si Accept alors
-		s := s’
-		Si f(s) < z* alors
-		z* := f(s)
-		s* := s
-		FS
-		Si Δf = 0 alors NGel := NGel + 1 sinon NGel := 0 FS
-		FS
-		T := k.T
-		
-	 */
 	
 	public RecuitSimule(int nbIterations,double temperature,double mu,double epsilon,int nbVoisins) {
 		
@@ -56,16 +36,13 @@ public class RecuitSimule {
 		this.delta=0.;
 		this.epsilon=epsilon;
 		this.nbVoisins = nbVoisins;
-		
+		this.r = new Random();
 	}
 	
 	public void run() throws IOException {
 		
 		//Construire aléatoirement une solution initiale s
 		s = Utilitaires.genererSolutionAleatoire(null);
-		
-		//Solution pour contuire voisinage
-		Solution v = Utilitaires.genererSolutionAleatoire(null);
 		
 		meilleurCout = 0.;
 		meilleurSolutionConnue=s;
@@ -74,6 +51,37 @@ public class RecuitSimule {
 		
 		do {
 			n++;
+			//Tirer au sort une solution s’ dans V(s)
+			solutionsVoisines = s.genererVoisinage(nbVoisins) ;
+			voisinAleatoire= solutionsVoisines.get(r.nextInt(nbVoisins));
+			voisinAleatoire.calculerFitness();
+			s.calculerFitness();
+			//Calculer la variation de coût Δf
+			delta = voisinAleatoire.getFitness() - s.getFitness();
+			
+			if ( delta <0. ) {
+				accepter=true;
+				
+			}
+			
+			else {
+				double p = r.nextDouble(); // tirage aléatoire d'une probabilité
+				accepter = p <= Math.exp(- delta / this.temperature);
+			}
+			
+			if (accepter) {
+				s = voisinAleatoire;
+				
+				if (s.getFitness() < meilleurCout) {
+							meilleurCout = s.getFitness();
+							meilleurSolutionConnue = s;
+				}
+				//Si Δf = 0 alors NGel := NGel + 1 sinon NGel := 0 FS
+				if ( delta ==0) nbIterationsSansChangementCout++;
+				else nbIterationsSansChangementCout=0;
+			}
+			
+			temperature=mu*temperature;
 		}
 		
 		while(temperature <= epsilon || n==nbIterations 

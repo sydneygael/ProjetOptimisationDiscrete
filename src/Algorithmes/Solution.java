@@ -21,12 +21,17 @@ public class Solution {
 
 	private Map<CentreFormation, List<Agence>> disposition;
 	private double fitness;
+	private List<CentreFormation> list; // stocker les entrées de la map
 
 	public Solution () {
 		disposition = new LinkedHashMap<CentreFormation, List<Agence>>();
 	}
 
-
+	/**
+	 * permet de générer un voisinage
+	 * @param nombreDeVoisins
+	 * @return
+	 */
 	public List<Solution> genererVoisinage(int nombreDeVoisins) {
 		List<Solution> voisinage = new ArrayList<Solution>();
 
@@ -41,7 +46,14 @@ public class Solution {
 		return voisinage;
 	}
 
+	/**
+	 * permet de générer un voisinage avec une solution différente
+	 * @param nombreDeVoisins
+	 * @param s2
+	 * @return
+	 */
 	public List<Solution> genererVoisinage(int nombreDeVoisins,Solution s2) {
+		//TO DO : verifier que les solutions ne contiennent pas les mêmes villes
 		List<Solution> voisinage = new ArrayList<Solution>();
 
 		for ( int i=0 ; i < nombreDeVoisins ; i++) {
@@ -218,6 +230,7 @@ public class Solution {
 			a2 = tirageAleatoireAgence(indexCentre2);
 		}
 		
+		list = new ArrayList<CentreFormation>(disposition.keySet());
 		CentreFormation c1 = getCentreFormationFromMap(indexCentre1);
 		CentreFormation c2 = getCentreFormationFromMap(indexCentre2);
 		//echange dans la solution aleatoire
@@ -267,8 +280,6 @@ public class Solution {
 
 
 	private CentreFormation getCentreFormationFromMap(int indexCentre) {
-		
-		List<CentreFormation> list = new ArrayList<CentreFormation>(disposition.keySet());
 		return list.get(indexCentre);
 	}
 
