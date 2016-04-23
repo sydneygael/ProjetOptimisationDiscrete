@@ -18,7 +18,7 @@ import Formation.CentreFormation;
 
 public class Utilitaires {
 
-	public static Carte carte ;
+	public static Carte carte = new Carte();
 
 	private static List<Agence> agences;
 
@@ -56,7 +56,7 @@ public class Utilitaires {
 					+ centreEnTete.getNom() + " id : "
 					+ centreEnTete.getId());
 
-			List<Agence> agencesSolution = chercherDisposition(centreEnTete);
+			List<Agence> agencesSolution = chercherAgencesLesPlusProches(centreEnTete);
 			System.out.println("recherche et ajout de la disposition pour id : "
 					+ centreEnTete.getId());
 			s1.ajouterUneDisposition(centreEnTete, agencesSolution);
@@ -72,13 +72,14 @@ public class Utilitaires {
 
 	public static Solution genererSolutionAleatoire(String ressourceAgence) throws IOException {
 
+		carte.getAgencesFromFile("Ressources/ListeAgences_100.txt");
+		carte.getCentreFormationFromFile("Ressources/LieuxPossibles.txt");
+		
 		//Solution une
 		Solution s1 = new Solution();
 
 		//la carte
-		carte =new Carte();
-		carte.getAgencesFromFile("Ressources/ListeAgences_100.txt");
-		carte.getCentreFormationFromFile("Ressources/LieuxPossibles.txt");
+		
 		agences = carte.getListAgences();
 		centresDeFormation = carte.getListCentreFormation();
 
@@ -92,9 +93,10 @@ public class Utilitaires {
 					+ centreAleatoire.getId());
 			System.out.println("-----------------------------------------");
 			System.out.println();
-			List<Agence> agencesSolution = chercherDisposition(centreAleatoire);
+			List<Agence> agencesSolution = chercherAgencesLesPlusProches(centreAleatoire);
 			System.out.println("recherche et ajout de la disposition pour id : "
 					+ centreAleatoire.getId());
+			centreAleatoire.setAgencesAssociees(agencesSolution);
 			s1.ajouterUneDisposition(centreAleatoire, agencesSolution);
 		}
 		
@@ -132,7 +134,7 @@ public class Utilitaires {
 		return result;
 	}
 
-	private static List<Agence> chercherDisposition(CentreFormation centreEnTete) {
+	private static List<Agence> chercherAgencesLesPlusProches(CentreFormation centreEnTete) {
 
 		//map pour les distances à trier
 		Map <Agence,Double> distancesTri = new HashMap<Agence, Double>();
@@ -158,17 +160,13 @@ public class Utilitaires {
 					double distance = centreEnTete.distance(agence);
 					distancesTri.put(agence, distance);
 				}
-			}
-
-			// une fois qu'on a fini de calculer les distances on tri
-			Map<Agence, Double> result = Utilitaires.sortByValue(distancesTri);
-			distancesTri=result;
-			//
-			//			for ( Double d : distancesTri.values()) {
-			//				System.out.println("vleur dista" +" : " +d+" km" );
-			//			}
+			}	
 		}
-
+		
+		// une fois qu'on a fini de calculer les distances on tri
+					Map<Agence, Double> result = Utilitaires.sortByValue(distancesTri);
+					distancesTri=result;
+	
 		// après avoir trier on construit une solution 
 
 		List<Agence> agencesSolution = new ArrayList<Agence>() ;

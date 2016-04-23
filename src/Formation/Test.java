@@ -39,9 +39,12 @@ public class Test {
         	System.out.println("SOLUTION ALEATOIRE N° 2");
         	System.out.println("-----------------------------------------");
         	System.out.println();
-        	Solution s2 = Utilitaires.genererSolutionAleatoire(null);
-        	List<Solution > l = s.genererVoisinage(8,s2);
         	
+        	List<Solution > l = s.genererVoisinage(2);
+        	s.calculerFitness();
+        	System.out.println(s.getFitness());
+        	double test = s.getFitness()-l.get(0).getFitness();
+        	System.out.println(test);
         	for ( Solution sol : l ){
         		
         		System.out.println("fitness voisin : " + sol.getFitness());

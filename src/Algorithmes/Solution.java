@@ -32,7 +32,7 @@ public class Solution {
 
 		for ( int i=0 ; i < nombreDeVoisins ; i++) {
 			Solution s = contruireVoisinAleatoire();
-			
+
 			while (s.dispositionPossible()==false) {
 				s = contruireVoisinAleatoire();
 			}
@@ -40,13 +40,13 @@ public class Solution {
 		}
 		return voisinage;
 	}
-	
+
 	public List<Solution> genererVoisinage(int nombreDeVoisins,Solution s2) {
 		List<Solution> voisinage = new ArrayList<Solution>();
 
 		for ( int i=0 ; i < nombreDeVoisins ; i++) {
 			Solution s = construireVoisinAleatoire(s2);
-			
+
 			while (s.dispositionPossible()==false) {
 				s = construireVoisinAleatoire(s2);
 			}
@@ -170,16 +170,17 @@ public class Solution {
 	}
 
 	public void calculerFitness() {
-		int coutFitness = 0;
+		int nbcentres = disposition.keySet().size();
+		double coutFitness = nbcentres * Lieux.COUT_TOTAL;
 
 		for (Entry<CentreFormation, List<Agence>> entry : disposition.entrySet()) {
 
-			for (Agence agence : entry.getValue()) {
+			List<Agence> values = entry.getValue();
+
+			for (Agence agence : values) {
 				CentreFormation lieu = entry.getKey();
-				int cout_transport = (int) (agence.getNbEmploye() * lieu.distance(agence)* Lieux.COUT_EMP);
-				coutFitness += cout_transport;
+				coutFitness+=Lieux.COUT_EMP*2*lieu.distance(agence);
 			}
-			coutFitness+=+Lieux.COUT_TOTAL;
 		}
 		this.fitness=coutFitness;
 	}
@@ -216,10 +217,11 @@ public class Solution {
 			a1 = tirageAleatoireAgence(indexCentre1);
 			a2 = tirageAleatoireAgence(indexCentre2);
 		}
-
+		
+		CentreFormation c1 = getCentreFormationFromMap(indexCentre1);
+		CentreFormation c2 = getCentreFormationFromMap(indexCentre2);
 		//echange dans la solution aleatoire
-		aleatoire.echangerAgencesEntreCentre(indexCentre1,indexCentre2,a1,a2,aleatoire);
-
+		aleatoire.echangerAgenceEntreCentreDeFormation(c1, c2);
 
 		//pour finir on calcul la nouvelle valeur de la fitness
 		aleatoire.calculerFitness();
@@ -227,47 +229,47 @@ public class Solution {
 	}
 
 
-	private void echangerAgencesEntreCentre(int indexCentre1, int indexCentre2, Map<Integer, Agence> a1,
-			Map<Integer, Agence> a2,Solution aleatoire) {
-
-		List <Agence> l1 ,l2;
-		l1=l2=null;
-
-		try {
-			l1 = getValueForEntry(indexCentre1) ;
-			l2 = getValueForEntry(indexCentre2) ;
-
-			for ( Entry<Integer, Agence> set1 : a1.entrySet()) {
-				l2.set(set1.getKey(), set1.getValue());
-			}
-
-			for ( Entry<Integer, Agence> set2 : a2.entrySet()) {
-				l1.set(set2.getKey(), set2.getValue());
-			}
-
-			CentreFormation c1=getCentreFormationFromMap(indexCentre1);
-			CentreFormation c2=getCentreFormationFromMap(indexCentre2);
-
-			disposition.put(c1, l1);
-			disposition.put(c2, l2);
-
-		}
-		catch ( IndexOutOfBoundsException e) {
-			e.printStackTrace();
+	
+	
+	private void echangerAgenceEntreCentreDeFormation(CentreFormation c1 ,CentreFormation c2) {
+		
+		List<Agence> associeesAC1 = c1.getAgencesAssociees();
+		List<Agence> associeesAC2 = c2.getAgencesAssociees();
+		Random alea = new Random();
+		int indexVilleChoisie1 = alea.nextInt(associeesAC1.size());
+		int indexVilleChoisie2 = alea.nextInt(associeesAC2.size());
+		
+		Agence duCentre1 = associeesAC1.get(indexVilleChoisie1);
+		Agence duCentre2 = associeesAC2.get(indexVilleChoisie2);
+		
+		associeesAC1.set(indexVilleChoisie1, duCentre2);
+		associeesAC2.set(indexVilleChoisie2, duCentre1);
+		
+		c1.setAgencesAssociees(associeesAC1);
+		c2.setAgencesAssociees(associeesAC2);
+		
+		int testtaille = disposition.entrySet().size();
+		disposition.put(c1, associeesAC1);
+		disposition.put(c2, associeesAC2);
+		int testtaille2 = disposition.entrySet().size();
+		
+		if (testtaille != testtaille2) {
+			System.out.println();
+			System.out.println();
+			System.out.println("*****************");
+			System.out.println("ERROR!!!!!!!!!!!");
+			System.out.println("*****************");
+			System.out.println();
+			System.out.println();
+			
 		}
 	}
 
 
 	private CentreFormation getCentreFormationFromMap(int indexCentre) {
-		Iterator<Entry<CentreFormation, List<Agence>>> iterator = disposition.entrySet().iterator();
-		int n = 0;
-		while(iterator.hasNext()){
-			if(n == indexCentre){
-				return iterator.next().getKey();
-			}
-			n ++;
-		}
-		return null;
+		
+		List<CentreFormation> list = new ArrayList<CentreFormation>(disposition.keySet());
+		return list.get(indexCentre);
 	}
 
 

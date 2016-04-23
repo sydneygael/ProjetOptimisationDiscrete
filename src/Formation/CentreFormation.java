@@ -19,12 +19,12 @@ import Utils.AjoutException;
  */
 public class CentreFormation extends Lieux{
 
-	private List<Employe> listeEmployes;
+	private List<Agence> agencesAssosciees;
 	private int nbEmp;
 
 	public CentreFormation(String id,String nom, String codepostal, double latitude, double longitude){
 		super(id,nom,codepostal,latitude,longitude);
-		listeEmployes=new ArrayList<Employe>();
+		agencesAssosciees=new ArrayList<Agence>();
 		nbEmp=0;
 	}
 
@@ -41,4 +41,12 @@ public class CentreFormation extends Lieux{
 	public int getNbEmployes() {
 		return nbEmp;
 	}
+	
+	public List<Agence> getAgencesAssociees() {
+        return agencesAssosciees;
+    }
+	
+	public List<Agence> setAgencesAssociees(List<Agence> toSet) {
+        return agencesAssosciees=toSet;
+    }
 }
