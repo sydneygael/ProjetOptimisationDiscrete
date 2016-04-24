@@ -18,9 +18,9 @@ public class Roulette {
     private int kPopulation;
     private Random alea;
 
-    public Roulette (Population population, int keptPopulationSize) {
+    public Roulette (Population population, int kPopulation) {
         this.population = population;
-        this.kPopulation = keptPopulationSize;
+        this.kPopulation = kPopulation;
         meilleuresSolutions = new ArrayList<Solution>(population.getSolutions());
         probabilitesCumulees = new ArrayList<Float>();
         alea = new Random();
