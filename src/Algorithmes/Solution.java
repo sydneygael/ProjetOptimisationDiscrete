@@ -71,8 +71,9 @@ public class Solution implements Comparable<Solution> {
 	/**
 	 * operation génétique de la mutation
 	 * @param centreMuteur
+	 * @return 
 	 */
-	public void mutation(CentreFormation centreMuteur) {
+	public CentreFormation mutation(CentreFormation centreMuteur) {
 		Random r = new Random();
 		int indexAmuter = r.nextInt(list.size());
 		CentreFormation aMuter = getCentreFormationFromMap(indexAmuter);
@@ -83,6 +84,7 @@ public class Solution implements Comparable<Solution> {
 		}
 
 		calculerFitness();
+		return aMuter;
 	}
 
 	/**

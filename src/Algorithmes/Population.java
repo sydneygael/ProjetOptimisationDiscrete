@@ -68,8 +68,8 @@ public class Population {
 		for (int i=0; i<taille; i++) {
 			int index = alea.nextInt(populationDeSolutions.size());
 			CentreFormation c = carte.getListCentreFormation().remove(0);
-			carte.getListCentreFormation().add(null);// ajouter bonne solution
-			populationDeSolutions.get(index).mutation(c);
+			CentreFormation sortant = populationDeSolutions.get(index).mutation(c);
+			carte.getListCentreFormation().add(sortant);
 		}
 	}
 
