@@ -42,7 +42,7 @@ public class RecuitSimule {
 	public void run() throws IOException {
 		
 		//Construire aléatoirement une solution initiale s
-		s = Utilitaires.genererSolutionAleatoire(null);
+		s = Utilitaires.genererSolutionAleatoire();
 		
 		meilleurCout = 0.;
 		meilleurSolutionConnue=s;
