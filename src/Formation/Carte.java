@@ -94,7 +94,13 @@ public class Carte  {
         return lieuxFormation;
     }
     
-    //PREMIERE SOLUTION
+    public void retirerAgence(int index) {
+    	listeAgences.remove(index);
+    }
+    
+    public void retirerCentreDeFormation(int index) {
+    	lieuxFormation.remove(index);
+    }
     
 
 }

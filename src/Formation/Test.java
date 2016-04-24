@@ -33,7 +33,7 @@ public class Test {
         	System.out.println("SOLUTION ALEATOIRE N° 1");
         	System.out.println("-----------------------------------------");
         	System.out.println();
-        	Solution s = Utilitaires.genererSolutionAleatoire(null);
+        	Solution s = Utilitaires.genererSolutionAleatoire();
         	System.out.println();
         	System.out.println("-----------------------------------------");
         	System.out.println("SOLUTION ALEATOIRE N° 2");

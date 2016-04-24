@@ -11,12 +11,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import Algorithmes.Population;
 import Algorithmes.Solution;
 import Formation.Agence;
 import Formation.Carte;
 import Formation.CentreFormation;
 
 public class Utilitaires {
+
+	public static final String RESSOURCES_LIEUX_POSSIBLES = "Ressources/LieuxPossibles.txt";
+
+	public static final String RESSOURCES_LISTE_AGENCES = "Ressources/ListeAgences_100.txt";
 
 	public static Carte carte = new Carte();
 
@@ -41,8 +46,8 @@ public class Utilitaires {
 
 		//la carte
 		carte =new Carte();
-		carte.getAgencesFromFile("Ressources/ListeAgences_100.txt");
-		carte.getCentreFormationFromFile("Ressources/LieuxPossibles.txt");
+		carte.getAgencesFromFile(RESSOURCES_LISTE_AGENCES);
+		carte.getCentreFormationFromFile(RESSOURCES_LIEUX_POSSIBLES);
 		agences = carte.getListAgences();
 		centresDeFormation = carte.getListCentreFormation();
 
@@ -70,10 +75,10 @@ public class Utilitaires {
 
 	}
 
-	public static Solution genererSolutionAleatoire(String ressourceAgence) throws IOException {
+	public static Solution genererSolutionAleatoire() throws IOException {
 
-		carte.getAgencesFromFile("Ressources/ListeAgences_100.txt");
-		carte.getCentreFormationFromFile("Ressources/LieuxPossibles.txt");
+		carte.getAgencesFromFile(RESSOURCES_LISTE_AGENCES);
+		carte.getCentreFormationFromFile(RESSOURCES_LIEUX_POSSIBLES);
 		
 		//Solution une
 		Solution s1 = new Solution();
@@ -183,6 +188,61 @@ public class Utilitaires {
 		}
 
 		return agencesSolution;
+	}
+	
+	public static List<Agence> chercherAgencesLesPlusProches(CentreFormation centreEnTete,
+			List<Agence> agencesListe) {
+		//map pour les distances à trier
+				Map <Agence,Double> distancesTri = new HashMap<Agence, Double>();
+
+				if ( !agencesListe.isEmpty()){
+
+					//on calcul les distances
+					for ( Agence agence : agencesListe) {
+
+						//on évite le cas ou l'agence est dejà un lieu de formation
+						if ( centreEnTete.equals(agence)) {
+
+							try {
+								centreEnTete.addNbEmployes(agence.getNbEmploye());
+								agencesListe.remove(agence);
+							} catch (AjoutException e) {
+								e.printStackTrace();
+							}
+						}
+
+						else {
+
+							double distance = centreEnTete.distance(agence);
+							distancesTri.put(agence, distance);
+						}
+					}	
+				}
+				
+				// une fois qu'on a fini de calculer les distances on tri
+							Map<Agence, Double> result = Utilitaires.sortByValue(distancesTri);
+							distancesTri=result;
+			
+				// après avoir trier on construit une solution 
+
+				List<Agence> agencesSolution = new ArrayList<Agence>() ;
+				int compteur=centreEnTete.getNbEmployes();
+
+				for (Agence a : distancesTri.keySet()) {
+					compteur+=a.getNbEmploye();
+
+					if (compteur <= 60) {
+						agencesSolution.add(a);
+						//on enlève de la liste les agences déjà traitées
+						agencesListe.remove(a);
+					}
+				}
+				
+				return agencesSolution;
+	}
+	
+	public static Population construitrePopulation(int taille) {
+		return null;
 	}
 
 }

@@ -61,7 +61,6 @@ public class RecuitSimule {
 			
 			if ( delta <0. ) {
 				accepter=true;
-				
 			}
 			
 			else {
