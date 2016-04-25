@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import Algorithmes.Solution;
 import Utils.Utilitaires;
+import Vue.CarteAffichage;
 
 /**
  *
@@ -52,6 +53,9 @@ public class Test {
                 RecuitSimule simul = new RecuitSimule(10, 1000, 0.99, -0.2, 10);
                 simul.run();
                 System.out.println("solution recuit fitness : "+simul.getMeilleurCout());
+                
+                CarteAffichage vue = new CarteAffichage();
+                vue.initCarte(simul.getMeilleurSolutionConnue().getDisposition());
                 
         	/*for ( Solution sol : l ){
         		

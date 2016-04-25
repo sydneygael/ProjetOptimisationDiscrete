@@ -30,6 +30,18 @@ public class CarteAffichage  extends javax.swing.JPanel{
 	
 	private ImageIcon image;
     	private Map<CentreFormation, List<Agence>> disposition;
+    	
+    	public void initCarte(Map<CentreFormation, List<Agence>> listeLieux){
+            disposition=listeLieux;
+            image=new ImageIcon(getClass().getResource("/CarteFrance.PNG"));
+
+            JFrame frame = new JFrame("Carte des Agences et Lieux de Formation");
+                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.add(this);  
+                    frame.pack();
+                    frame.setBounds(0, 0, 673, 734); //Taille de l'image
+                    frame.setVisible(true);
+        }
 
     
     public void setDisposition(Map<CentreFormation, List<Agence>> listeLieux){
@@ -62,7 +74,7 @@ public class CarteAffichage  extends javax.swing.JPanel{
     
     @Override
     public void paintComponent(Graphics g){
-        image=new ImageIcon(getClass().getResource("/Ressources/CarteFrance.PNG"));
+    	
         super.paintComponent(g);        
         g.drawImage(image.getImage(), 0, 0,  this);
         
@@ -80,11 +92,12 @@ public class CarteAffichage  extends javax.swing.JPanel{
             
             for (Map.Entry<CentreFormation, List<Agence>> entry : disposition.entrySet()) {       
                 g.setColor(colors.get((int) (Math.random()*colors.size())));  //Choix d'une couleur aléatoire*/
+                CentreFormation centre = entry.getKey();
+                pCentre=ajouterLieu(centre.getLatitude(),centre.getLongitude());
                 for(Agence agence : entry.getValue()){ 
-                    CentreFormation centre = entry.getKey();
-                    pCentre=ajouterLieu(centre.getLongitude(),centre.getLatitude());
                     
-                    p=ajouterLieu(agence.getLongitude(),agence.getLatitude());
+                    
+                    p=ajouterLieu(agence.getLatitude(),agence.getLongitude());
                     System.out.println("Ville "+agence.getNom()+" de longitude "+agence.getLatitude()+" et de latitude "+agence.getLongitude());
                     
                     //g.setColor(Color.BLUE);

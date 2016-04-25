@@ -8,7 +8,7 @@ import Utils.Utilitaires;
 
 public class RecuitSimule {
 
-    
+
 	// les constantes
 	public static final int NB_ITER_SANS_CHANGEMENT=200;
 	public static final int NB_ITER_MAX=10000;
@@ -27,10 +27,10 @@ public class RecuitSimule {
 	private int nbVoisins;
 	private Random r;
 	private List<Solution> solutionsVoisines ;
-	
-	
+
+
 	public RecuitSimule(int nbIterations,double temperature,double mu,double epsilon,int nbVoisins) {
-		
+
 		this.nbIterations = nbIterations;
 		this.temperature=temperature;
 		this.mu = mu;
@@ -40,19 +40,19 @@ public class RecuitSimule {
 		this.nbVoisins = nbVoisins;
 		this.r = new Random();
 	}
-	
+
 	public void run() throws IOException {
-		
+
 		//Construire aléatoirement une solution initiale s
-		s = Utilitaires.premiereSolution();
+		s = Utilitaires.genererSolutionAleatoire();
 		s.calculerFitness();
-		System.out.println("debut première solution" + s.getFitness());
-		
+		//System.out.println("debut première solution: " + s.getFitness());
+
 		meilleurCout = s.getFitness();
 		meilleurSolutionConnue=s;
 		nbIterationsSansAmelioration=0;
 		int n =0;
-		
+
 		do {
 			n++;
 			//Tirer au sort une solution s’ dans V(s)
@@ -66,97 +66,97 @@ public class RecuitSimule {
 			System.out.println();
 			//Calculer la variation de coût Δf
 			delta = voisinAleatoire.getFitness() - s.getFitness();
-			
+
 			if ( delta <0. ) {
 				accepter=true;
 			}
-			
+
 			else {
 				double p = r.nextDouble(); // tirage aléatoire d'une probabilité
 				accepter = p <= Math.exp(- delta / this.temperature);
 			}
-			
+
 			if (accepter) {
 				s = voisinAleatoire;
-				
+
 				if (s.getFitness() < meilleurCout) {
-							meilleurCout = s.getFitness();
-							meilleurSolutionConnue = s;
+					meilleurCout = s.getFitness();
+					meilleurSolutionConnue = s;
 				}
 				//Si Δf = 0 alors NGel := NGel + 1 sinon NGel := 0 FS
 				if ( delta ==0) nbIterationsSansAmelioration++;
 				else nbIterationsSansAmelioration=0;
 			}
-			
+
 			temperature=mu*temperature;
 		}
-		
+
 		while(temperature <= epsilon || n< nbIterations 
 				|| nbIterationsSansAmelioration<NB_ITER_SANS_CHANGEMENT);
 	}
-        
-        public int getNbIterations() {
-        return nbIterations;
-    }
 
-    public void setNbIterations(int nbIterations) {
-        this.nbIterations = nbIterations;
-    }
+	public int getNbIterations() {
+		return nbIterations;
+	}
 
-    public double getTemperature() {
-        return temperature;
-    }
+	public void setNbIterations(int nbIterations) {
+		this.nbIterations = nbIterations;
+	}
 
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
-    }
+	public double getTemperature() {
+		return temperature;
+	}
 
-    public double getMu() {
-        return mu;
-    }
+	public void setTemperature(double temperature) {
+		this.temperature = temperature;
+	}
 
-    public void setMu(double mu) {
-        this.mu = mu;
-    }
+	public double getMu() {
+		return mu;
+	}
 
-    public double getDelta() {
-        return delta;
-    }
+	public void setMu(double mu) {
+		this.mu = mu;
+	}
 
-    public void setDelta(double delta) {
-        this.delta = delta;
-    }
+	public double getDelta() {
+		return delta;
+	}
 
-    public Solution getVoisinAleatoire() {
-        return voisinAleatoire;
-    }
+	public void setDelta(double delta) {
+		this.delta = delta;
+	}
 
-    public void setVoisinAleatoire(Solution voisinAleatoire) {
-        this.voisinAleatoire = voisinAleatoire;
-    }
+	public Solution getVoisinAleatoire() {
+		return voisinAleatoire;
+	}
 
-    public double getMeilleurCout() {
-        return meilleurCout;
-    }
+	public void setVoisinAleatoire(Solution voisinAleatoire) {
+		this.voisinAleatoire = voisinAleatoire;
+	}
 
-    public void setMeilleurCout(double meilleurCout) {
-        this.meilleurCout = meilleurCout;
-    }
+	public double getMeilleurCout() {
+		return meilleurCout;
+	}
 
-    public Solution getMeilleurSolutionConnue() {
-        return meilleurSolutionConnue;
-    }
+	public void setMeilleurCout(double meilleurCout) {
+		this.meilleurCout = meilleurCout;
+	}
 
-    public void setMeilleurSolutionConnue(Solution meilleurSolutionConnue) {
-        this.meilleurSolutionConnue = meilleurSolutionConnue;
-    }
+	public Solution getMeilleurSolutionConnue() {
+		return meilleurSolutionConnue;
+	}
 
-    public double getNbIterationsSansAmelioration() {
-        return nbIterationsSansAmelioration;
-    }
+	public void setMeilleurSolutionConnue(Solution meilleurSolutionConnue) {
+		this.meilleurSolutionConnue = meilleurSolutionConnue;
+	}
 
-    public void setNbIterationsSansAmelioration(double nbIterationsSansAmelioration) {
-        this.nbIterationsSansAmelioration = nbIterationsSansAmelioration;
-    }
+	public double getNbIterationsSansAmelioration() {
+		return nbIterationsSansAmelioration;
+	}
+
+	public void setNbIterationsSansAmelioration(double nbIterationsSansAmelioration) {
+		this.nbIterationsSansAmelioration = nbIterationsSansAmelioration;
+	}
 
 }
