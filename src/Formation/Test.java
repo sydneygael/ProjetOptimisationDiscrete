@@ -5,6 +5,7 @@
  */
 package Formation;
 
+import Algorithmes.RecuitSimule;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -24,13 +25,13 @@ public class Test {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         
-        try {
+       // try {
             /*carte1.getAgencesFromFile("Ressources/ListeAgences_100.txt");
             
             carte1.getCentreFormationFromFile("Ressources/LieuxPossibles.txt");*/
-        	System.out.println();
+        	/*System.out.println();
         	System.out.println("-----------------------------------------");
         	System.out.println("SOLUTION ALEATOIRE N� 1");
         	System.out.println("-----------------------------------------");
@@ -46,9 +47,13 @@ public class Test {
         	s.calculerFitness();
         	System.out.println(s.getFitness());
         	double test = s.getFitness()-l.get(0).getFitness();
-        	System.out.println(test);
+        	System.out.println(test);*/
         	
-        	for ( Solution sol : l ){
+                RecuitSimule simul = new RecuitSimule(10, 1000, 0.99, -0.2, 10);
+                simul.run();
+                System.out.println("solution recuit fitness : "+simul.getMeilleurCout());
+                
+        	/*for ( Solution sol : l ){
         		
         		/*for (Entry<CentreFormation, List<Agence>> e : sol.getDisposition().entrySet()) {
         			int nbemp=0;
@@ -58,13 +63,13 @@ public class Test {
         			System.out.println("le centre " + e.getKey().nom+ " a "+ nbemp+ " employes");
 				}*/
                         
-        		System.out.println("fitness voisin : " + sol.getFitness());
+        		//System.out.println("fitness voisin : " + sol.getFitness());
         	}
         	
         }
-        catch (IOException ex) {
+        /*catch (IOException ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+        }*/
+    //}
     
-}
+//}

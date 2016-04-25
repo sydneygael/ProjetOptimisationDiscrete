@@ -24,7 +24,7 @@ public abstract class Lieux {
 	protected double latitude;
 	protected double longitude;
 
-	public Lieux(String id,String nom, String codepostal, double latitude, double longitude){
+	public Lieux(String id,String nom, String codepostal, double longitude, double latitude){
 		this.id=id;
 		this.nom=nom;
 		this.codePostal=codepostal;
@@ -55,7 +55,7 @@ public abstract class Lieux {
 
 
 	/**
-	 * permettra de comparer si deux lieux sont les mêmes
+	 * permettra de comparer si deux lieux sont les mï¿½mes
 	 */
 	@Override
 	public boolean equals(Object obj) {

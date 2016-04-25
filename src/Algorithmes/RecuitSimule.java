@@ -7,6 +7,8 @@ import java.util.Random;
 import Utils.Utilitaires;
 
 public class RecuitSimule {
+
+    
 	// les constantes
 	public static final int NB_ITER_SANS_CHANGEMENT=200;
 	public static final int NB_ITER_MAX=10000;
@@ -86,5 +88,69 @@ public class RecuitSimule {
 		while(temperature <= epsilon || n< nbIterations 
 				|| nbIterationsSansAmelioration<NB_ITER_SANS_CHANGEMENT);
 	}
+        
+        public int getNbIterations() {
+        return nbIterations;
+    }
+
+    public void setNbIterations(int nbIterations) {
+        this.nbIterations = nbIterations;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
+    }
+
+    public double getMu() {
+        return mu;
+    }
+
+    public void setMu(double mu) {
+        this.mu = mu;
+    }
+
+    public double getDelta() {
+        return delta;
+    }
+
+    public void setDelta(double delta) {
+        this.delta = delta;
+    }
+
+    public Solution getVoisinAleatoire() {
+        return voisinAleatoire;
+    }
+
+    public void setVoisinAleatoire(Solution voisinAleatoire) {
+        this.voisinAleatoire = voisinAleatoire;
+    }
+
+    public double getMeilleurCout() {
+        return meilleurCout;
+    }
+
+    public void setMeilleurCout(double meilleurCout) {
+        this.meilleurCout = meilleurCout;
+    }
+
+    public Solution getMeilleurSolutionConnue() {
+        return meilleurSolutionConnue;
+    }
+
+    public void setMeilleurSolutionConnue(Solution meilleurSolutionConnue) {
+        this.meilleurSolutionConnue = meilleurSolutionConnue;
+    }
+
+    public double getNbIterationsSansAmelioration() {
+        return nbIterationsSansAmelioration;
+    }
+
+    public void setNbIterationsSansAmelioration(double nbIterationsSansAmelioration) {
+        this.nbIterationsSansAmelioration = nbIterationsSansAmelioration;
+    }
 
 }

@@ -24,7 +24,7 @@ public class Agence extends Lieux{
      * @param longitude
      * @param nbEmploye
      */
-    public Agence(String id,String nom, String codepostal, double latitude, double longitude, int nbEmploye){
+    public Agence(String id,String nom, String codepostal, double longitude, double latitude, int nbEmploye){
         super(id,nom,codepostal,latitude,longitude);
         this.nbEmploye=nbEmploye;
     }
