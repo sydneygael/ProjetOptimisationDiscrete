@@ -6,7 +6,9 @@
 package Formation;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,13 +32,13 @@ public class Test {
             carte1.getCentreFormationFromFile("Ressources/LieuxPossibles.txt");*/
         	System.out.println();
         	System.out.println("-----------------------------------------");
-        	System.out.println("SOLUTION ALEATOIRE N° 1");
+        	System.out.println("SOLUTION ALEATOIRE Nï¿½ 1");
         	System.out.println("-----------------------------------------");
         	System.out.println();
         	Solution s = Utilitaires.genererSolutionAleatoire();
         	System.out.println();
         	System.out.println("-----------------------------------------");
-        	System.out.println("SOLUTION ALEATOIRE N° 2");
+        	System.out.println("SOLUTION ALEATOIRE Nï¿½ 2");
         	System.out.println("-----------------------------------------");
         	System.out.println();
         	
@@ -45,12 +47,22 @@ public class Test {
         	System.out.println(s.getFitness());
         	double test = s.getFitness()-l.get(0).getFitness();
         	System.out.println(test);
+        	
         	for ( Solution sol : l ){
         		
+        		/*for (Entry<CentreFormation, List<Agence>> e : sol.getDisposition().entrySet()) {
+        			int nbemp=0;
+        			for (Agence a : e.getKey().getAgencesAssociees() ) {
+        				nbemp+=a.getNbEmploye();
+        			}
+        			System.out.println("le centre " + e.getKey().nom+ " a "+ nbemp+ " employes");
+				}*/
+                        
         		System.out.println("fitness voisin : " + sol.getFitness());
         	}
         	
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

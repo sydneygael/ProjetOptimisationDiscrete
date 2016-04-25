@@ -20,7 +20,7 @@ public class RecuitSimule {
 	private Solution voisinAleatoire;
 	private double meilleurCout;
 	private Solution meilleurSolutionConnue;
-	private double nbIterationsSansChangementCout;
+	private double nbIterationsSansAmelioration;
 	private double epsilon;
 	private int nbVoisins;
 	private Random r;
@@ -44,9 +44,9 @@ public class RecuitSimule {
 		//Construire aléatoirement une solution initiale s
 		s = Utilitaires.genererSolutionAleatoire();
 		
-		meilleurCout = 0.;
+		meilleurCout = s.getFitness();
 		meilleurSolutionConnue=s;
-		nbIterationsSansChangementCout=0;
+		nbIterationsSansAmelioration=0;
 		int n =0;
 		
 		do {
@@ -55,7 +55,7 @@ public class RecuitSimule {
 			solutionsVoisines = s.genererVoisinage(nbVoisins) ;
 			voisinAleatoire= solutionsVoisines.get(r.nextInt(nbVoisins));
 			voisinAleatoire.calculerFitness();
-			s.calculerFitness();
+			
 			//Calculer la variation de coût Δf
 			delta = voisinAleatoire.getFitness() - s.getFitness();
 			
@@ -76,15 +76,15 @@ public class RecuitSimule {
 							meilleurSolutionConnue = s;
 				}
 				//Si Δf = 0 alors NGel := NGel + 1 sinon NGel := 0 FS
-				if ( delta ==0) nbIterationsSansChangementCout++;
-				else nbIterationsSansChangementCout=0;
+				if ( delta ==0) nbIterationsSansAmelioration++;
+				else nbIterationsSansAmelioration=0;
 			}
 			
 			temperature=mu*temperature;
 		}
 		
-		while(temperature <= epsilon || n==nbIterations 
-				|| nbIterationsSansChangementCout==NB_ITER_SANS_CHANGEMENT);
+		while(temperature <= epsilon || n< nbIterations 
+				|| nbIterationsSansAmelioration<NB_ITER_SANS_CHANGEMENT);
 	}
 
 }
