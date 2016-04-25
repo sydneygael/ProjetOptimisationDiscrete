@@ -44,7 +44,9 @@ public class RecuitSimule {
 	public void run() throws IOException {
 		
 		//Construire aléatoirement une solution initiale s
-		s = Utilitaires.genererSolutionAleatoire();
+		s = Utilitaires.premiereSolution();
+		s.calculerFitness();
+		System.out.println("debut première solution" + s.getFitness());
 		
 		meilleurCout = s.getFitness();
 		meilleurSolutionConnue=s;
@@ -57,7 +59,11 @@ public class RecuitSimule {
 			solutionsVoisines = s.genererVoisinage(nbVoisins) ;
 			voisinAleatoire= solutionsVoisines.get(r.nextInt(nbVoisins));
 			voisinAleatoire.calculerFitness();
-			
+			System.out.println();
+			System.out.println("------------------voisin aleatoire--------------------");
+			System.out.println("fitness v(s) = " + voisinAleatoire.getFitness());
+			System.out.println("------------------voisin aleatoire--------------------");
+			System.out.println();
 			//Calculer la variation de coût Δf
 			delta = voisinAleatoire.getFitness() - s.getFitness();
 			

@@ -22,8 +22,8 @@ public class CentreFormation extends Lieux{
 	private List<Agence> agencesAssosciees;
 	private int nbEmp;
 
-	public CentreFormation(String id,String nom, String codepostal, double latitude, double longitude){
-		super(id,nom,codepostal,latitude,longitude);
+	public CentreFormation(String id,String nom, String codepostal, double longitude,double latitude){
+		super(id,nom,codepostal,longitude,latitude);
 		agencesAssosciees=new ArrayList<Agence>();
 		nbEmp=0;
 	}

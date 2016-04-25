@@ -118,7 +118,7 @@ public abstract class Lieux {
 		double dist = EARTH_RADIUS * c;
 
 
-		System.out.println("La distance entre " + nom+ " et " + lieu2.nom + " est de "+ dist + " km");
+		//System.out.println("La distance entre " + nom+ " et " + lieu2.nom + " est de "+ dist + " km");
 		return dist;
 	}
 

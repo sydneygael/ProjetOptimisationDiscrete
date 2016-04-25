@@ -64,6 +64,7 @@ public class Utilitaires {
 			List<Agence> agencesSolution = chercherAgencesLesPlusProches(centreEnTete);
 			System.out.println("recherche et ajout de la disposition pour id : "
 					+ centreEnTete.getId());
+			centreEnTete.setAgencesAssociees(agencesSolution);
 			s1.ajouterUneDisposition(centreEnTete, agencesSolution);
 
 		}
