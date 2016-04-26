@@ -4,29 +4,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import Formation.CentreFormation;
 import Utils.Utilitaires;
 
-public class RecuitSimule {
+public class RecuitSimule extends Metaheuristique {
 
 
 	// les constantes
 	public static final int NB_ITER_SANS_CHANGEMENT=200;
 	public static final int NB_ITER_MAX=10000;
 	//les variables
-	private int nbIterations;
-	private double temperature;
-	private double mu;
-	private double delta;
-	private boolean accepter;
-	private Solution s ;
-	private Solution voisinAleatoire;
-	private double meilleurCout;
-	private Solution meilleurSolutionConnue;
-	private double nbIterationsSansAmelioration;
-	private double epsilon;
-	private int nbVoisins;
-	private Random r;
-	private List<Solution> solutionsVoisines ;
+
 
 
 	public RecuitSimule(int nbIterations,double temperature,double mu,double epsilon,int nbVoisins) {
@@ -34,7 +22,7 @@ public class RecuitSimule {
 		this.nbIterations = nbIterations;
 		this.temperature=temperature;
 		this.mu = mu;
-		s= new Solution();
+		s= new SolutionSimple();
 		this.delta=0.;
 		this.epsilon=epsilon;
 		this.nbVoisins = nbVoisins;
@@ -44,10 +32,10 @@ public class RecuitSimule {
 	public void run() throws IOException {
 
 		//Construire aléatoirement une solution initiale s
-		s = Utilitaires.genererSolutionAleatoire();
-		s.calculerFitness();
-		//System.out.println("debut première solution: " + s.getFitness());
-
+		s = Utilitaires.genererUneSolutionSimple();
+		
+		System.out.println("debut première solution: " + s.getFitness());
+		System.out.println(" nb centres : " + s.centresDansLaSolution.size());
 		meilleurCout = s.getFitness();
 		meilleurSolutionConnue=s;
 		nbIterationsSansAmelioration=0;
@@ -56,9 +44,13 @@ public class RecuitSimule {
 		do {
 			n++;
 			//Tirer au sort une solution s’ dans V(s)
-			solutionsVoisines = s.genererVoisinage(nbVoisins) ;
+			solutionsVoisines = s.genererVoisinageS(nbVoisins);
 			voisinAleatoire= solutionsVoisines.get(r.nextInt(nbVoisins));
-			voisinAleatoire.calculerFitness();
+			
+			for(CentreFormation c : voisinAleatoire.centresDansLaSolution){
+				System.out.println("centres v(s) = " + c.verifierCentre());
+			}
+			
 			System.out.println();
 			System.out.println("------------------voisin aleatoire--------------------");
 			System.out.println("fitness v(s) = " + voisinAleatoire.getFitness());
@@ -90,9 +82,15 @@ public class RecuitSimule {
 
 			temperature=mu*temperature;
 		}
+		while (n<100);
+		/*while(temperature <= epsilon && n < nbIterations 
+				&& nbIterationsSansAmelioration<NB_ITER_SANS_CHANGEMENT);*/
 
-		while(temperature <= epsilon || n< nbIterations 
-				|| nbIterationsSansAmelioration<NB_ITER_SANS_CHANGEMENT);
+		for ( CentreFormation c : meilleurSolutionConnue.centresDansLaSolution) {
+			System.out.println(c.verifierCentre());
+		}
+
+
 	}
 
 	public int getNbIterations() {
@@ -131,7 +129,7 @@ public class RecuitSimule {
 		return voisinAleatoire;
 	}
 
-	public void setVoisinAleatoire(Solution voisinAleatoire) {
+	public void setVoisinAleatoire(SolutionSimple voisinAleatoire) {
 		this.voisinAleatoire = voisinAleatoire;
 	}
 
@@ -143,11 +141,11 @@ public class RecuitSimule {
 		this.meilleurCout = meilleurCout;
 	}
 
-	public Solution getMeilleurSolutionConnue() {
+	public SolutionSimple getMeilleurSolutionConnue() {
 		return meilleurSolutionConnue;
 	}
 
-	public void setMeilleurSolutionConnue(Solution meilleurSolutionConnue) {
+	public void setMeilleurSolutionConnue(SolutionSimple meilleurSolutionConnue) {
 		this.meilleurSolutionConnue = meilleurSolutionConnue;
 	}
 
@@ -157,6 +155,12 @@ public class RecuitSimule {
 
 	public void setNbIterationsSansAmelioration(double nbIterationsSansAmelioration) {
 		this.nbIterationsSansAmelioration = nbIterationsSansAmelioration;
+	}
+
+	public double min(double val1 , double val2) {
+		if(val1 < val2) return val1;
+		else return val2;
+
 	}
 
 }

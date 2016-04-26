@@ -33,7 +33,7 @@ public class CarteAffichage  extends javax.swing.JPanel{
     	
     	public void initCarte(Map<CentreFormation, List<Agence>> listeLieux){
             disposition=listeLieux;
-            image=new ImageIcon(getClass().getResource("/CarteFrance.PNG"));
+            image=new ImageIcon("Ressources/CarteFrance.PNG");
 
             JFrame frame = new JFrame("Carte des Agences et Lieux de Formation");
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

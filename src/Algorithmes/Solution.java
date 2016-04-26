@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import Formation.Agence;
-import Formation.Carte;
 import Formation.CentreFormation;
 import Formation.Lieux;
 /**
@@ -20,9 +19,9 @@ import Formation.Lieux;
  */
 public class Solution implements Comparable<Solution> {
 
-	private Map<CentreFormation, List<Agence>> disposition;
-	private double fitness;
-	private List<CentreFormation> list; // stocker les clees de la map
+	protected Map<CentreFormation, List<Agence>> disposition;
+	protected double fitness;
+	protected List<CentreFormation> list; // stocker les clees de la map
 
 	public Solution () {
 		disposition = new LinkedHashMap<CentreFormation, List<Agence>>();
@@ -39,7 +38,7 @@ public class Solution implements Comparable<Solution> {
 		for ( int i=0 ; i < nombreDeVoisins ; i++) {
 			Solution s = contruireVoisinAleatoire();
 
-			while (s.dispositionPossible()==false) {
+			while (!s.dispositionPossible()) {
 				s = contruireVoisinAleatoire();
 			}
 			voisinage.add(s);
@@ -93,13 +92,13 @@ public class Solution implements Comparable<Solution> {
 	 * @return
 	 */
 	public Solution croisement (Solution s2) {
-
-		Solution solutionCroisee=null;
-		Random r = new Random();
-		int index = r.nextInt(disposition.entrySet().size());
-
+		Solution solutionCroisee=construireVoisinAleatoire(s2);
+		while (!solutionCroisee.dispositionPossible()) {
+			solutionCroisee=construireVoisinAleatoire(s2);
+		}
 		return solutionCroisee;
 	}
+	
 	public Map<CentreFormation, List<Agence>> getDisposition() {
 		return disposition;
 	}
@@ -130,20 +129,14 @@ public class Solution implements Comparable<Solution> {
 	}
 
 	public boolean dispositionPossible () {
-
-		for ( Entry<CentreFormation, List<Agence>> entree : disposition.entrySet()) {
-
-			int cpt =0;
-			List<Agence> agences = entree.getValue();
-
-			for ( Agence a : agences ) {
-				cpt+=a.getNbEmploye();
-			}
-
-			if (cpt>60) return false;
+		list = new ArrayList<CentreFormation>(disposition.keySet());
+		for ( CentreFormation c: list){
+			if (!c.verifierCentre()) return false;
 		}
+		
 		return true;
 	} 
+	
 	public Solution construireVoisinAleatoire(Solution s2) {
 
 		Solution alea = new Solution();
@@ -280,15 +273,6 @@ public class Solution implements Comparable<Solution> {
 			indexCentre2= random.nextInt(tailleCentre);
 		}
 
-		//on choisit ensuite deux agences à echanger entre centres
-		Map <Integer,Agence> a1 = tirageAleatoireAgence(indexCentre1);
-		Map <Integer,Agence> a2 = tirageAleatoireAgence(indexCentre2);
-
-		while( a1 == null || a2 == null) {
-			a1 = tirageAleatoireAgence(indexCentre1);
-			a2 = tirageAleatoireAgence(indexCentre2);
-		}
-
 		list = new ArrayList<CentreFormation>(disposition.keySet());
 		CentreFormation c1 = getCentreFormationFromMap(indexCentre1);
 		CentreFormation c2 = getCentreFormationFromMap(indexCentre2);
@@ -335,6 +319,7 @@ public class Solution implements Comparable<Solution> {
 	}
 
 	private CentreFormation getCentreFormationFromMap(int indexCentre) {
+		list = new ArrayList<CentreFormation>(disposition.keySet());
 		return list.get(indexCentre);
 	}
 

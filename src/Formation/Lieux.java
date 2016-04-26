@@ -65,6 +65,7 @@ public abstract class Lieux {
 		if (obj == null) {
 			return false;
 		}
+		
 		if (!(obj instanceof CentreFormation)) {
 			return false;
 		}

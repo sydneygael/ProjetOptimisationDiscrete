@@ -4,12 +4,8 @@
  * and open the template in the editor.
  */
 package Formation;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.sun.xml.internal.ws.api.pipe.ThrowableContainerPropertySet;
 
 import Utils.AjoutException;
 
@@ -49,4 +45,13 @@ public class CentreFormation extends Lieux{
 	public List<Agence> setAgencesAssociees(List<Agence> toSet) {
         return agencesAssosciees=toSet;
     }
+	
+	public boolean verifierCentre () {
+		int cpt=0;
+		for ( Agence a : agencesAssosciees) {
+			cpt+=a.getNbEmploye();
+			if (cpt>60) return false;
+		}
+		return true;
+	}
 }

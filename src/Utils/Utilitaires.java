@@ -13,6 +13,7 @@ import java.util.Random;
 
 import Algorithmes.Population;
 import Algorithmes.Solution;
+import Algorithmes.SolutionSimple;
 import Formation.Agence;
 import Formation.Carte;
 import Formation.CentreFormation;
@@ -109,6 +110,48 @@ public class Utilitaires {
 		while(!centresDeFormation.isEmpty() && !agences.isEmpty());
 		s1.calculerFitness();
 		return s1;
+	}
+
+	public static SolutionSimple genererUneSolutionSimple () throws IOException {
+
+		carte.getAgencesFromFile(RESSOURCES_LISTE_AGENCES);
+		carte.getCentreFormationFromFile(RESSOURCES_LIEUX_POSSIBLES);
+
+		//la carte
+
+		agences = carte.getListAgences();
+		centresDeFormation = carte.getListCentreFormation();
+		SolutionSimple s = new SolutionSimple();
+		int nbCentres=0 ;
+
+		do {
+
+			randomIndex = random.nextInt(centresDeFormation.size());
+			CentreFormation centreAleatoire = centresDeFormation.remove(randomIndex);
+			System.out.println("-----------------------------------------");
+			System.out.println("Prise d'un centre du centre de formation "
+					+ centreAleatoire.getNom() + " id : "
+					+ centreAleatoire.getId());
+			System.out.println("-----------------------------------------");
+			System.out.println();
+			List<Agence> agencesSolution = chercherAgencesLesPlusProches(centreAleatoire);
+			System.out.println("recherche et ajout de la disposition pour id : "
+					+ centreAleatoire.getId());
+			centreAleatoire.setAgencesAssociees(agencesSolution);
+
+			for (Agence a : agencesSolution) {
+				s.ajouterDispositon(a,centreAleatoire);
+			}
+
+			nbCentres++;
+			s.centresDansLaSolution.add(centreAleatoire);
+			s.calculerFitness();
+		}
+		
+		while(!centresDeFormation.isEmpty() && !agences.isEmpty());
+		s.setNbCentres(nbCentres);
+
+		return s;
 	}
 
 	public Random getRandom() {

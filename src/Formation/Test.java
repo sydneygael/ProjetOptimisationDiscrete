@@ -5,6 +5,7 @@
  */
 package Formation;
 
+import Algorithmes.AlogrithmeGenetique;
 import Algorithmes.RecuitSimule;
 import java.io.IOException;
 import java.util.Iterator;
@@ -50,12 +51,17 @@ public class Test {
         	double test = s.getFitness()-l.get(0).getFitness();
         	System.out.println(test);*/
         	
-                RecuitSimule simul = new RecuitSimule(10, 1000, 0.99, -0.2, 10);
+                RecuitSimule simul = new RecuitSimule(100, 10000, 0.99, 0.0, 5);
                 simul.run();
                 System.out.println("solution recuit fitness : "+simul.getMeilleurCout());
                 
-                CarteAffichage vue = new CarteAffichage();
+                /*AlogrithmeGenetique g = new AlogrithmeGenetique(10);
+                g.run();*/
+                
+               CarteAffichage vue = new CarteAffichage();
                 vue.initCarte(simul.getMeilleurSolutionConnue().getDisposition());
+                
+              
                 
         	/*for ( Solution sol : l ){
         		
