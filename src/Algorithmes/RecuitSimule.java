@@ -43,6 +43,7 @@ public class RecuitSimule extends Metaheuristique {
 
 		do {
 			n++;
+			System.out.println(n);
 			//Tirer au sort une solution s’ dans V(s)
 			solutionsVoisines = s.genererVoisinageS(nbVoisins);
 			voisinAleatoire= solutionsVoisines.get(r.nextInt(nbVoisins));
@@ -78,7 +79,7 @@ public class RecuitSimule extends Metaheuristique {
 
 			temperature=mu*temperature;
 		}
-		while (n<100);
+		while (n<500);
 		/*while(temperature <= epsilon && n < nbIterations 
 				&& nbIterationsSansAmelioration<NB_ITER_SANS_CHANGEMENT);*/
 

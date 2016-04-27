@@ -57,8 +57,8 @@ public class Population {
 	public void croiser() {
 		int n = populationDeSolutions.size();
 		for (int i=0; i+2<=n; i += 2) {
-			populationDeSolutions.get(i)
-			.croisement(populationDeSolutions.get(i + 1));
+			/*populationDeSolutions.get(i)
+			.croisement(populationDeSolutions.get(i + 1));*/
 		}
 	}
 

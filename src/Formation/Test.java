@@ -51,9 +51,9 @@ public class Test {
         	double test = s.getFitness()-l.get(0).getFitness();
         	System.out.println(test);*/
         	
-                RecuitSimule simul = new RecuitSimule(100, 10000, 0.99, 0.0, 5);
+                RecuitSimule simul = new RecuitSimule(1000, 10000, 0.99, 0.0, 5);
                 simul.run();
-                System.out.println("solution recuit fitness : "+simul.getMeilleurCout());
+                System.out.println("solution recuit fitness : "+simul.getMeilleurSolutionConnue().getFitness());
                 
                 /*AlogrithmeGenetique g = new AlogrithmeGenetique(10);
                 g.run();*/

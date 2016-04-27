@@ -47,27 +47,6 @@ public class Solution implements Comparable<Solution> {
 	}
 
 	/**
-	 * permet de générer un voisinage avec une solution différente
-	 * @param nombreDeVoisins
-	 * @param s2
-	 * @return
-	 */
-	public List<Solution> genererVoisinage(int nombreDeVoisins,Solution s2) {
-		//TO DO : verifier que les solutions ne contiennent pas les mêmes villes
-		List<Solution> voisinage = new ArrayList<Solution>();
-
-		for ( int i=0 ; i < nombreDeVoisins ; i++) {
-			Solution s = construireVoisinAleatoire(s2);
-
-			while (s.dispositionPossible()==false) {
-				s = construireVoisinAleatoire(s2);
-			}
-			voisinage.add(s);
-		}
-		return voisinage;
-	}
-
-	/**
 	 * operation génétique de la mutation
 	 * @param centreMuteur
 	 * @return 
@@ -84,19 +63,6 @@ public class Solution implements Comparable<Solution> {
 
 		calculerFitness();
 		return aMuter;
-	}
-
-	/**
-	 * operation génétique du croisement
-	 * @param s2
-	 * @return
-	 */
-	public Solution croisement (Solution s2) {
-		Solution solutionCroisee=construireVoisinAleatoire(s2);
-		while (!solutionCroisee.dispositionPossible()) {
-			solutionCroisee=construireVoisinAleatoire(s2);
-		}
-		return solutionCroisee;
 	}
 	
 	public Map<CentreFormation, List<Agence>> getDisposition() {
@@ -136,48 +102,6 @@ public class Solution implements Comparable<Solution> {
 		
 		return true;
 	} 
-	
-	public Solution construireVoisinAleatoire(Solution s2) {
-
-		Solution alea = new Solution();
-
-		// tirage aléatoire
-		Random r = new Random();
-		int indexCentreSolution1 = r.nextInt(this.disposition.size());
-		int indexCentreSolution2 = r.nextInt(s2.getDisposition().size());
-
-		Map<Integer, Agence> coupleAgenceS1 = this.tirageAleatoireAgence(indexCentreSolution1);
-		Map<Integer, Agence> coupleAgenceS2 = s2.tirageAleatoireAgence(indexCentreSolution2);
-
-		CentreFormation c1=getCentreFormationFromMap(indexCentreSolution1);
-
-		List <Agence> l1 = c1.getAgencesAssociees();
-
-		int index1 = -1,index2= -1 ;
-		Agence agenceAleatoire = null;
-
-		// on récupère les valeurs du tirage
-		for (Entry<Integer, Agence> entry1 : coupleAgenceS1.entrySet() ) {
-			index1 = entry1.getKey();
-		}
-
-		for (Entry<Integer, Agence> entry2 : coupleAgenceS2.entrySet() ) {
-			index2 = entry2.getKey();
-			agenceAleatoire = entry2.getValue();
-		}
-
-		// on construit la nouvelle solution
-		if ( index1 != -1 && index2 != -1 && agenceAleatoire != null) {
-			l1.set(index1, agenceAleatoire);
-		}
-
-		alea.setDisposition(disposition);
-		alea.ajouterUneDisposition(c1, l1);
-		alea.calculerFitness();
-
-		return alea;
-
-	}
 
 	/**
 	 * permet d'ajouter un centre de formation et les villes associées

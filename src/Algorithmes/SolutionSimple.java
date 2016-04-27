@@ -43,6 +43,7 @@ public class SolutionSimple extends Solution {
 		this.dispositionSimple = dispositionSimple;
 		this.centresDansLaSolution = centresDansLaSolution;
 		this.carte = carte;
+		centresDansLaCarte = carte.getListCentreFormation();
 	}
 
 	public SolutionSimple (Carte carte) {
@@ -50,6 +51,7 @@ public class SolutionSimple extends Solution {
 		dispositionSimple = new LinkedHashMap <Agence,CentreFormation>();
 		centresDansLaSolution = new ArrayList<CentreFormation>();
 		this.carte=carte;
+		centresDansLaCarte = carte.getListCentreFormation();
 	}
 
 	public SolutionSimple construireVoisinAleatoire () {
@@ -92,28 +94,32 @@ public class SolutionSimple extends Solution {
 
 	public SolutionSimple voisinAleatoire() {
 		
-		SolutionSimple aleatoire = this.clone();
+		SolutionSimple aleatoire = new SolutionSimple();
+		aleatoire.setDispositionSimple(dispositionSimple);
+		aleatoire.centresDansLaSolution = new ArrayList<>(centresDansLaSolution);
+		aleatoire.centresDansLaCarte = new ArrayList<>(centresDansLaCarte);
 		Random r = new Random();
 		
 		int indexCentreSolution = r.nextInt(centresDansLaSolution.size());
 		int indexCentreCarte = r.nextInt(centresDansLaCarte.size());
 		
-		CentreFormation cSolution = aleatoire.centresDansLaSolution.remove(indexCentreSolution);
-		CentreFormation cCarte = aleatoire.centresDansLaCarte.remove(indexCentreCarte);
+		CentreFormation cSolution = centresDansLaSolution.remove(indexCentreSolution);
+		CentreFormation cCarte = centresDansLaCarte.remove(indexCentreCarte);
 		
-		aleatoire.centresDansLaSolution.add(indexCentreSolution, cCarte);
-		aleatoire.centresDansLaCarte.add(cSolution);
-		
-		aleatoire.dispositionSimple = new LinkedHashMap<Agence,CentreFormation>();
-		
-		for (CentreFormation c : aleatoire.centresDansLaSolution) {
+		centresDansLaSolution.add(indexCentreSolution, cCarte);
+		centresDansLaCarte.add(cSolution);
+		agencesDansLaSolution = new ArrayList<Agence>(dispositionSimple.keySet());
+		aleatoire.setDispositionSimple(new LinkedHashMap<Agence,CentreFormation>());
+		for (CentreFormation c : centresDansLaSolution) {
 			
-			List<Agence> agencesProches = Utilitaires.chercherAgencesLesPlusProches(c,carte.getListAgences());
+			List<Agence> agencesProches = Utilitaires.chercherAgencesLesPlusProches(c,agencesDansLaSolution);
 			
 			for (Agence a : agencesProches) {
-				aleatoire.dispositionSimple.put(a, c);
+				aleatoire.getDispositionSimple().put(a,c);
 			}
 		}
+		
+		aleatoire.calculerFitness();
 		
 		return aleatoire;
 	}
@@ -127,10 +133,10 @@ public class SolutionSimple extends Solution {
 		List<SolutionSimple> voisinage = new ArrayList<SolutionSimple>();
 
 		for ( int i=0 ; i < nombreDeVoisins ; i++) {
-			SolutionSimple s = construireVoisinAleatoire();
+			SolutionSimple s = voisinAleatoire();
 
 			while (!s.solutionPosiible()) {
-				s = construireVoisinAleatoire();
+				s = voisinAleatoire();
 			}
 
 			s.calculerFitness();

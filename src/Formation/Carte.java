@@ -110,7 +110,7 @@ public class Carte  {
 	}
 	
     @Override
-	protected Carte clone() {
+	public Carte clone() {
     	List<Agence> listeAgencesClone= new ArrayList<>(listeAgences);
     	List<CentreFormation> lieuxFormationClone= new ArrayList<>(lieuxFormation);
     	Carte clone = new Carte();
