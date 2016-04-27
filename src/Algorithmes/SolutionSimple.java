@@ -11,6 +11,7 @@ import Formation.Agence;
 import Formation.Carte;
 import Formation.CentreFormation;
 import Formation.Lieux;
+import Utils.Utilitaires;
 
 public class SolutionSimple extends Solution {
 
@@ -27,14 +28,14 @@ public class SolutionSimple extends Solution {
 		dispositionSimple = new LinkedHashMap <Agence,CentreFormation>();
 		centresDansLaSolution = new ArrayList<CentreFormation>();
 	}
-	
+
 	public SolutionSimple (Map <Agence,CentreFormation> dispositionSimple,
 			List<Agence> agencesDansLaSolution,List<CentreFormation> centresDansLaSolution){
 		this.agencesDansLaSolution = agencesDansLaSolution;
 		this.dispositionSimple = dispositionSimple;
 		this.centresDansLaSolution = centresDansLaSolution;
 	}
-	
+
 	public SolutionSimple (Map <Agence,CentreFormation> dispositionSimple,
 			List<Agence> agencesDansLaSolution,List<CentreFormation> centresDansLaSolution,
 			Carte carte){
@@ -43,7 +44,7 @@ public class SolutionSimple extends Solution {
 		this.centresDansLaSolution = centresDansLaSolution;
 		this.carte = carte;
 	}
-	
+
 	public SolutionSimple (Carte carte) {
 		agencesDansLaSolution = new ArrayList<Agence>();
 		dispositionSimple = new LinkedHashMap <Agence,CentreFormation>();
@@ -75,7 +76,7 @@ public class SolutionSimple extends Solution {
 		//on réalise un échange de centre
 		CentreFormation c1 = dispositionSimple.get(a1);
 		CentreFormation c2 = dispositionSimple.get(a2);
-		
+
 		aleatoire.getDispositionSimple().put(a1, c2);
 		aleatoire.getDispositionSimple().put(a2, c1);
 
@@ -88,8 +89,34 @@ public class SolutionSimple extends Solution {
 		return aleatoire;
 
 	}
-	
-	public SolutionSimple voisinAleatoire(List<Centre>)
+
+	public SolutionSimple voisinAleatoire() {
+		
+		SolutionSimple aleatoire = this.clone();
+		Random r = new Random();
+		
+		int indexCentreSolution = r.nextInt(centresDansLaSolution.size());
+		int indexCentreCarte = r.nextInt(centresDansLaCarte.size());
+		
+		CentreFormation cSolution = aleatoire.centresDansLaSolution.remove(indexCentreSolution);
+		CentreFormation cCarte = aleatoire.centresDansLaCarte.remove(indexCentreCarte);
+		
+		aleatoire.centresDansLaSolution.add(indexCentreSolution, cCarte);
+		aleatoire.centresDansLaCarte.add(cSolution);
+		
+		aleatoire.dispositionSimple = new LinkedHashMap<Agence,CentreFormation>();
+		
+		for (CentreFormation c : aleatoire.centresDansLaSolution) {
+			
+			List<Agence> agencesProches = Utilitaires.chercherAgencesLesPlusProches(c,carte.getListAgences());
+			
+			for (Agence a : agencesProches) {
+				aleatoire.dispositionSimple.put(a, c);
+			}
+		}
+		
+		return aleatoire;
+	}
 
 	/**
 	 * permet de générer un voisinage
@@ -105,7 +132,7 @@ public class SolutionSimple extends Solution {
 			while (!s.solutionPosiible()) {
 				s = construireVoisinAleatoire();
 			}
-			
+
 			s.calculerFitness();
 			voisinage.add(s);
 		}
@@ -122,10 +149,10 @@ public class SolutionSimple extends Solution {
 			Agence agence = entry.getKey();
 			coutFitness+=Lieux.COUT_EMP*2*agence.distance(centre)*agence.getNbEmploye();
 		}
-		
+
 		this.fitness = coutFitness;
 	}
-	
+
 	public boolean solutionPosiible() {
 
 		for ( CentreFormation c : centresDansLaSolution)
@@ -150,7 +177,7 @@ public class SolutionSimple extends Solution {
 	public void ajouterDispositon(Agence a, CentreFormation centreAleatoire) {
 		dispositionSimple.put(a, centreAleatoire);
 	}
-	
+
 	public Agence getAgenceFromMap(int indexCentre) {
 		agencesDansLaSolution = new ArrayList<Agence>(dispositionSimple.keySet());
 		return agencesDansLaSolution.get(indexCentre);
@@ -171,7 +198,7 @@ public class SolutionSimple extends Solution {
 		Map <Agence,CentreFormation> dispositionSimpleClone = new LinkedHashMap<Agence,CentreFormation>(dispositionSimple);
 		List<Agence> agencesDansLaSolutionClone=new ArrayList<Agence>(agencesDansLaSolution) ;
 		List<CentreFormation> centresDansLaSolutionClone=new ArrayList<CentreFormation>(centresDansLaSolution);
-		
+
 		return new SolutionSimple(dispositionSimpleClone, agencesDansLaSolutionClone, centresDansLaSolutionClone,carte);
 	}
 

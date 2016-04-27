@@ -78,7 +78,7 @@ public class Utilitaires {
 
 		agences = carte.getListAgences();
 		centresDeFormation = carte.getListCentreFormation();
-		SolutionSimple s = new SolutionSimple();
+		SolutionSimple s = new SolutionSimple(carte);
 		int nbCentres=0 ;
 
 		do {
