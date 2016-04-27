@@ -47,10 +47,6 @@ public class RecuitSimule extends Metaheuristique {
 			solutionsVoisines = s.genererVoisinageS(nbVoisins);
 			voisinAleatoire= solutionsVoisines.get(r.nextInt(nbVoisins));
 			
-			for(CentreFormation c : voisinAleatoire.centresDansLaSolution){
-				System.out.println("centres v(s) = " + c.verifierCentre());
-			}
-			
 			System.out.println();
 			System.out.println("------------------voisin aleatoire--------------------");
 			System.out.println("fitness v(s) = " + voisinAleatoire.getFitness());
@@ -85,11 +81,6 @@ public class RecuitSimule extends Metaheuristique {
 		while (n<100);
 		/*while(temperature <= epsilon && n < nbIterations 
 				&& nbIterationsSansAmelioration<NB_ITER_SANS_CHANGEMENT);*/
-
-		for ( CentreFormation c : meilleurSolutionConnue.centresDansLaSolution) {
-			System.out.println(c.verifierCentre());
-		}
-
 
 	}
 

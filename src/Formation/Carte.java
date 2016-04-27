@@ -3,13 +3,12 @@ package Formation;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Carte  {
-    
-    private List<Agence> listeAgences;
+
+	private List<Agence> listeAgences;
     private List<CentreFormation> lieuxFormation;
 
     public Carte() {
@@ -102,5 +101,22 @@ public class Carte  {
     	lieuxFormation.remove(index);
     }
     
+    public void setListeAgences(List<Agence> listeAgences) {
+		this.listeAgences = listeAgences;
+	}
+
+	public void setLieuxFormation(List<CentreFormation> lieuxFormation) {
+		this.lieuxFormation = lieuxFormation;
+	}
+	
+    @Override
+	protected Carte clone() {
+    	List<Agence> listeAgencesClone= new ArrayList<>(listeAgences);
+    	List<CentreFormation> lieuxFormationClone= new ArrayList<>(lieuxFormation);
+    	Carte clone = new Carte();
+    	clone.setListeAgences(listeAgencesClone);
+    	clone.setLieuxFormation(lieuxFormationClone);
+    	return clone;
+    }
 
 }

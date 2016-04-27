@@ -17,6 +17,7 @@ public class SolutionSimple extends Solution {
 	private Map <Agence,CentreFormation> dispositionSimple;
 	private List<Agence> agencesDansLaSolution ;
 	public List<CentreFormation> centresDansLaSolution;
+	public List<CentreFormation> centresDansLaCarte;
 
 	int nbCentres ;
 	private Carte carte;
@@ -40,6 +41,7 @@ public class SolutionSimple extends Solution {
 		this.agencesDansLaSolution = agencesDansLaSolution;
 		this.dispositionSimple = dispositionSimple;
 		this.centresDansLaSolution = centresDansLaSolution;
+		this.carte = carte;
 	}
 	
 	public SolutionSimple (Carte carte) {
@@ -86,6 +88,8 @@ public class SolutionSimple extends Solution {
 		return aleatoire;
 
 	}
+	
+	public SolutionSimple voisinAleatoire(List<Centre>)
 
 	/**
 	 * permet de générer un voisinage
@@ -167,7 +171,8 @@ public class SolutionSimple extends Solution {
 		Map <Agence,CentreFormation> dispositionSimpleClone = new LinkedHashMap<Agence,CentreFormation>(dispositionSimple);
 		List<Agence> agencesDansLaSolutionClone=new ArrayList<Agence>(agencesDansLaSolution) ;
 		List<CentreFormation> centresDansLaSolutionClone=new ArrayList<CentreFormation>(centresDansLaSolution);
-		return new SolutionSimple(dispositionSimpleClone, agencesDansLaSolutionClone, centresDansLaSolutionClone);
+		
+		return new SolutionSimple(dispositionSimpleClone, agencesDansLaSolutionClone, centresDansLaSolutionClone,carte);
 	}
 
 }
