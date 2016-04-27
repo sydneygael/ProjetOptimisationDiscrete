@@ -34,49 +34,6 @@ public class Utilitaires {
 
 	private static int randomIndex;
 
-	/**
-	 * construction de la première solution
-	 * @return
-	 * @throws IOException 
-	 */
-
-	public static Solution premiereSolution () throws IOException {
-
-		//Solution une
-		Solution s1 = new Solution();
-
-		//la carte
-		carte =new Carte();
-		carte.getAgencesFromFile(RESSOURCES_LISTE_AGENCES);
-		carte.getCentreFormationFromFile(RESSOURCES_LIEUX_POSSIBLES);
-		agences = carte.getListAgences();
-		centresDeFormation = carte.getListCentreFormation();
-
-		do {
-
-			//on prend le premier centre de formation
-
-			CentreFormation centreEnTete = centresDeFormation.remove(0);
-
-			System.out.println("Prise d'un centre du centre de formation "
-					+ centreEnTete.getNom() + " id : "
-					+ centreEnTete.getId());
-
-			List<Agence> agencesSolution = chercherAgencesLesPlusProches(centreEnTete);
-			System.out.println("recherche et ajout de la disposition pour id : "
-					+ centreEnTete.getId());
-			centreEnTete.setAgencesAssociees(agencesSolution);
-			s1.ajouterUneDisposition(centreEnTete, agencesSolution);
-
-		}
-		while(!centresDeFormation.isEmpty() && !agences.isEmpty());
-
-		System.out.println();
-		System.out.println("nb villes total = "+s1.getNb_Villes());
-		return s1;
-
-	}
-
 	public static Solution genererSolutionAleatoire() throws IOException {
 
 		carte.getAgencesFromFile(RESSOURCES_LISTE_AGENCES);

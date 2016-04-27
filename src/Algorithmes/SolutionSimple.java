@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Map.Entry;
 
 import Formation.Agence;
+import Formation.Carte;
 import Formation.CentreFormation;
 import Formation.Lieux;
 
@@ -18,11 +19,34 @@ public class SolutionSimple extends Solution {
 	public List<CentreFormation> centresDansLaSolution;
 
 	int nbCentres ;
+	private Carte carte;
 
 	public SolutionSimple (){
 		agencesDansLaSolution = new ArrayList<Agence>();
 		dispositionSimple = new LinkedHashMap <Agence,CentreFormation>();
 		centresDansLaSolution = new ArrayList<CentreFormation>();
+	}
+	
+	public SolutionSimple (Map <Agence,CentreFormation> dispositionSimple,
+			List<Agence> agencesDansLaSolution,List<CentreFormation> centresDansLaSolution){
+		this.agencesDansLaSolution = agencesDansLaSolution;
+		this.dispositionSimple = dispositionSimple;
+		this.centresDansLaSolution = centresDansLaSolution;
+	}
+	
+	public SolutionSimple (Map <Agence,CentreFormation> dispositionSimple,
+			List<Agence> agencesDansLaSolution,List<CentreFormation> centresDansLaSolution,
+			Carte carte){
+		this.agencesDansLaSolution = agencesDansLaSolution;
+		this.dispositionSimple = dispositionSimple;
+		this.centresDansLaSolution = centresDansLaSolution;
+	}
+	
+	public SolutionSimple (Carte carte) {
+		agencesDansLaSolution = new ArrayList<Agence>();
+		dispositionSimple = new LinkedHashMap <Agence,CentreFormation>();
+		centresDansLaSolution = new ArrayList<CentreFormation>();
+		this.carte=carte;
 	}
 
 	public SolutionSimple construireVoisinAleatoire () {
@@ -92,7 +116,7 @@ public class SolutionSimple extends Solution {
 		for (Entry<Agence,CentreFormation> entry : dispositionSimple.entrySet()) {
 			CentreFormation centre = entry.getValue();
 			Agence agence = entry.getKey();
-			coutFitness+=Lieux.COUT_EMP*2*agence.distance(centre);
+			coutFitness+=Lieux.COUT_EMP*2*agence.distance(centre)*agence.getNbEmploye();
 		}
 		
 		this.fitness = coutFitness;
@@ -123,9 +147,27 @@ public class SolutionSimple extends Solution {
 		dispositionSimple.put(a, centreAleatoire);
 	}
 	
-	private Agence getAgenceFromMap(int indexCentre) {
+	public Agence getAgenceFromMap(int indexCentre) {
 		agencesDansLaSolution = new ArrayList<Agence>(dispositionSimple.keySet());
 		return agencesDansLaSolution.get(indexCentre);
+	}
+
+	@Override
+	public boolean equals(Object obj ) {
+
+		if (!(obj instanceof SolutionSimple)) {
+			return false;
+		}
+		SolutionSimple other = (SolutionSimple) obj;
+		return (other.getFitness()-getFitness() != 0.);
+	}
+
+	@Override
+	protected SolutionSimple clone() {
+		Map <Agence,CentreFormation> dispositionSimpleClone = new LinkedHashMap<Agence,CentreFormation>(dispositionSimple);
+		List<Agence> agencesDansLaSolutionClone=new ArrayList<Agence>(agencesDansLaSolution) ;
+		List<CentreFormation> centresDansLaSolutionClone=new ArrayList<CentreFormation>(centresDansLaSolution);
+		return new SolutionSimple(dispositionSimpleClone, agencesDansLaSolutionClone, centresDansLaSolutionClone);
 	}
 
 }
