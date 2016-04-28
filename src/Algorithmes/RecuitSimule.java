@@ -22,7 +22,7 @@ public class RecuitSimule extends Metaheuristique {
 		this.nbIterations = nbIterations;
 		this.temperature=temperature;
 		this.mu = mu;
-		s= new SolutionSimple();
+		s= new Solution();
 		this.delta=0.;
 		this.epsilon=epsilon;
 		this.nbVoisins = nbVoisins;
@@ -45,7 +45,7 @@ public class RecuitSimule extends Metaheuristique {
 			n++;
 			System.out.println(n);
 			//Tirer au sort une solution s’ dans V(s)
-			solutionsVoisines = s.genererVoisinageS(nbVoisins);
+			solutionsVoisines = s.genererVoisinage(nbVoisins);
 			voisinAleatoire= solutionsVoisines.get(r.nextInt(nbVoisins));
 			
 			System.out.println();
@@ -79,7 +79,7 @@ public class RecuitSimule extends Metaheuristique {
 
 			temperature=mu*temperature;
 		}
-		while (n<500);
+		while (n<nbIterations);
 		/*while(temperature <= epsilon && n < nbIterations 
 				&& nbIterationsSansAmelioration<NB_ITER_SANS_CHANGEMENT);*/
 
@@ -121,7 +121,7 @@ public class RecuitSimule extends Metaheuristique {
 		return voisinAleatoire;
 	}
 
-	public void setVoisinAleatoire(SolutionSimple voisinAleatoire) {
+	public void setVoisinAleatoire(Solution voisinAleatoire) {
 		this.voisinAleatoire = voisinAleatoire;
 	}
 
@@ -133,11 +133,11 @@ public class RecuitSimule extends Metaheuristique {
 		this.meilleurCout = meilleurCout;
 	}
 
-	public SolutionSimple getMeilleurSolutionConnue() {
+	public Solution getMeilleurSolutionConnue() {
 		return meilleurSolutionConnue;
 	}
 
-	public void setMeilleurSolutionConnue(SolutionSimple meilleurSolutionConnue) {
+	public void setMeilleurSolutionConnue(Solution meilleurSolutionConnue) {
 		this.meilleurSolutionConnue = meilleurSolutionConnue;
 	}
 

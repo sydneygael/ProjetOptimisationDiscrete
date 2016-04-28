@@ -5,13 +5,11 @@
  */
 package Formation;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Corentin
  */
-public class Agence extends Lieux{
+public class Agence extends Lieux implements Comparable<Agence> {
     
     private int nbEmploye;
     
@@ -32,6 +30,11 @@ public class Agence extends Lieux{
     public int getNbEmploye() {
         return nbEmploye;
     }
+
+	@Override
+	public int compareTo(Agence o) {
+		return this.id.compareTo(o.getId());
+	}
     
     
 }

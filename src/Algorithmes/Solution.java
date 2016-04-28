@@ -1,30 +1,152 @@
 package Algorithmes;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.Map.Entry;
 
 import Formation.Agence;
+import Formation.Carte;
 import Formation.CentreFormation;
 import Formation.Lieux;
-/**
- * 
- * @author Sydney
- *
- */
-public class Solution implements Comparable<Solution> {
+import Utils.Utilitaires;
 
-	protected Map<CentreFormation, List<Agence>> disposition;
-	protected double fitness;
-	protected List<CentreFormation> list; // stocker les clees de la map
+public class Solution implements Comparable <Solution> {
 
-	public Solution () {
-		disposition = new LinkedHashMap<CentreFormation, List<Agence>>();
+	private Map <Agence,CentreFormation> disposition;
+	private List<Agence> agencesDansLaSolution ;
+	public List<CentreFormation> centresDansLaSolution;
+	public List<CentreFormation> centresDansLaCarte;
+
+	int nbCentres ;
+	private Carte carte;
+	private double fitness;
+
+	public Solution (){
+		agencesDansLaSolution = new ArrayList<Agence>();
+		disposition = new LinkedHashMap <Agence,CentreFormation>();
+		centresDansLaSolution = new ArrayList<CentreFormation>();
+	}
+
+	public Solution (Map <Agence,CentreFormation> dispositionSimple,
+			List<Agence> agencesDansLaSolution,List<CentreFormation> centresDansLaSolution){
+		this.agencesDansLaSolution = agencesDansLaSolution;
+		this.disposition = dispositionSimple;
+		this.centresDansLaSolution = centresDansLaSolution;
+	}
+
+	public Solution (Map <Agence,CentreFormation> dispositionSimple,
+			List<Agence> agencesDansLaSolution,List<CentreFormation> centresDansLaSolution,
+			Carte carte){
+		this.agencesDansLaSolution = agencesDansLaSolution;
+		this.disposition = dispositionSimple;
+		this.centresDansLaSolution = centresDansLaSolution;
+		this.carte = carte;
+		centresDansLaCarte = carte.getListCentreFormation();
+	}
+
+	public Solution (Carte carte) {
+		agencesDansLaSolution = new ArrayList<Agence>();
+		disposition = new LinkedHashMap <Agence,CentreFormation>();
+		centresDansLaSolution = new ArrayList<CentreFormation>();
+		this.carte=carte;
+		centresDansLaCarte = carte.getListCentreFormation();
+	}
+
+	public Solution construireVoisinAleatoire () {
+
+		Solution aleatoire = new Solution();
+		aleatoire.setDispositionSimple(disposition);
+		aleatoire.centresDansLaSolution = new ArrayList<>(centresDansLaSolution);
+		Random random = new Random();
+		int tailleAgences = disposition.size();
+
+		//on choisit une agence au hasard 
+		int indexVille1 = random.nextInt(tailleAgences);
+		int indexVille2 = random.nextInt(tailleAgences);
+
+		Agence a1 = getAgenceFromMap(indexVille1);
+		Agence a2 = getAgenceFromMap(indexVille2);
+
+		// tant que ce ne sont pas des agences différentes on regénérère
+		while ( indexVille1 == indexVille2) {
+			indexVille1= random.nextInt(tailleAgences);
+			indexVille2= random.nextInt(tailleAgences);
+		}
+
+		//on réalise un échange de centre
+		CentreFormation c1 = disposition.get(a1);
+		CentreFormation c2 = disposition.get(a2);
+
+		aleatoire.getDispositionSimple().put(a1, c2);
+		aleatoire.getDispositionSimple().put(a2, c1);
+
+		//on met a jour
+		c1.getAgencesAssociees().remove(a1);
+		c1.getAgencesAssociees().add(a2);
+		c2.getAgencesAssociees().remove(a2);
+		c2.getAgencesAssociees().add(a1);
+
+		return aleatoire;
+
+	}
+
+	public Solution voisinAleatoire() {
+
+		Solution aleatoire = new Solution();
+		aleatoire.setDispositionSimple(disposition);
+		aleatoire.centresDansLaSolution = new ArrayList<>(centresDansLaSolution);
+		aleatoire.centresDansLaCarte = new ArrayList<>(centresDansLaCarte);
+		Random r = new Random();
+
+		int indexCentreSolution = r.nextInt(centresDansLaSolution.size());
+		int indexCentreCarte = r.nextInt(centresDansLaCarte.size());
+
+		CentreFormation cSolution = centresDansLaSolution.remove(indexCentreSolution);
+		CentreFormation cCarte = centresDansLaCarte.remove(indexCentreCarte);
+
+		centresDansLaSolution.add(indexCentreSolution, cCarte);
+		centresDansLaCarte.add(cSolution);
+		agencesDansLaSolution = new ArrayList<Agence>(disposition.keySet());
+		aleatoire.setDispositionSimple(new LinkedHashMap<Agence,CentreFormation>());
+		for (CentreFormation c : centresDansLaSolution) {
+
+			List<Agence> agencesProches = Utilitaires.chercherAgencesLesPlusProches(c,agencesDansLaSolution);
+
+			for (Agence a : agencesProches) {
+				aleatoire.getDispositionSimple().put(a,c);
+			}
+		}
+
+		aleatoire.calculerFitness();
+
+		return aleatoire;
+	}
+
+	public void croisement (Solution s2) {
+
+		agencesDansLaSolution = new ArrayList<>(disposition.keySet());
+		int index= new Random().nextInt(agencesDansLaSolution.size());
+		List <Agence> l1 = agencesDansLaSolution.subList(0, index);
+		List <Agence> l2 = agencesDansLaSolution.subList(index, agencesDansLaSolution.size());
+
+
+		Map<Agence, CentreFormation> partie1 = l1.stream()
+				.filter(disposition::containsKey)
+				.collect(Collectors.toMap(Function.identity(), disposition::get));
+
+		Map< Agence, CentreFormation> partie2 =  l2.stream()
+				.filter(disposition::containsKey)
+				.collect(Collectors.toMap(Function.identity(), disposition::get));
+
+		partie1.putAll(partie2);
+		disposition = new LinkedHashMap<>(partie1);
+		calculerFitness();
+
 	}
 
 	/**
@@ -36,41 +158,55 @@ public class Solution implements Comparable<Solution> {
 		List<Solution> voisinage = new ArrayList<Solution>();
 
 		for ( int i=0 ; i < nombreDeVoisins ; i++) {
-			Solution s = contruireVoisinAleatoire();
+			Solution s = voisinAleatoire();
 
-			while (!s.dispositionPossible()) {
-				s = contruireVoisinAleatoire();
+			while (!s.solutionPosiible()) {
+				s = voisinAleatoire();
 			}
+
+			s.calculerFitness();
 			voisinage.add(s);
 		}
 		return voisinage;
 	}
 
-	/**
-	 * operation génétique de la mutation
-	 * @param centreMuteur
-	 * @return 
-	 */
-	public CentreFormation mutation(CentreFormation centreMuteur) {
-		Random r = new Random();
-		int indexAmuter = r.nextInt(list.size());
-		CentreFormation aMuter = getCentreFormationFromMap(indexAmuter);
-		List <Agence> listeDuCentre = disposition.get(aMuter);
 
-		if ( disposition.remove(aMuter, listeDuCentre)) {
-			disposition.put(centreMuteur, listeDuCentre);
+	public void calculerFitness() {
+
+		double coutFitness = centresDansLaSolution.size() * Lieux.COUT_TOTAL;
+
+		for (Entry<Agence,CentreFormation> entry : disposition.entrySet()) {
+			CentreFormation centre = entry.getValue();
+			Agence agence = entry.getKey();
+			coutFitness+=Lieux.COUT_EMP*2*agence.distance(centre)*agence.getNbEmploye();
 		}
 
-		calculerFitness();
-		return aMuter;
-	}
-	
-	public Map<CentreFormation, List<Agence>> getDisposition() {
-		return disposition;
+		this.setFitness(coutFitness);
 	}
 
-	public void setDisposition(Map<CentreFormation, List<Agence>> disposition) {
+	public boolean solutionPosiible() {
+
+		for ( CentreFormation c : centresDansLaSolution)
+		{
+			if (c.verifierCentre()==false) return false;
+		}
+		return true;
+	}
+
+	public void setNbCentres(int nbCentres) {
+		this.nbCentres=nbCentres;
+	}
+
+	public Map<Agence, CentreFormation> getDispositionSimple() {
+		return this.disposition;
+	}
+
+	public void setDispositionSimple(Map<Agence, CentreFormation> disposition) {
 		this.disposition = disposition;
+	}
+
+	public void ajouterDispositon(Agence a, CentreFormation centreAleatoire) {
+		disposition.put(a, centreAleatoire);
 	}
 
 	public double getFitness() {
@@ -81,91 +217,28 @@ public class Solution implements Comparable<Solution> {
 		this.fitness = fitness;
 	}
 
-	public List<Agence> getValueForEntry(int id){
-
-		Iterator<Entry<CentreFormation, List<Agence>>> iterator = disposition.entrySet().iterator();
-		int n = 0;
-		while(iterator.hasNext()){
-			if(n == id){
-				return iterator.next().getValue();
-			}
-			n ++;
-		}
-		return null;
+	public Agence getAgenceFromMap(int indexCentre) {
+		agencesDansLaSolution = new ArrayList<Agence>(disposition.keySet());
+		return agencesDansLaSolution.get(indexCentre);
 	}
 
-	public boolean dispositionPossible () {
-		list = new ArrayList<CentreFormation>(disposition.keySet());
-		for ( CentreFormation c: list){
-			if (!c.verifierCentre()) return false;
-		}
-		
-		return true;
-	} 
+	@Override
+	public boolean equals(Object obj ) {
 
-	/**
-	 * permet d'ajouter un centre de formation et les villes associées
-	 * @param cle
-	 * @param valeur
-	 */
-	public void ajouterUneDisposition(CentreFormation cle , List<Agence> valeur){
-		disposition.put(cle, valeur);
+		if (!(obj instanceof Solution)) {
+			return false;
+		}
+		Solution other = (Solution) obj;
+		return (other.getFitness()- getFitness() != 0.);
 	}
 
-	public int getTotalEmployes () {
+	@Override
+	protected Solution clone() {
+		Map <Agence,CentreFormation> dispositionSimpleClone = new LinkedHashMap<Agence,CentreFormation>(disposition);
+		List<Agence> agencesDansLaSolutionClone=new ArrayList<Agence>(agencesDansLaSolution) ;
+		List<CentreFormation> centresDansLaSolutionClone=new ArrayList<CentreFormation>(centresDansLaSolution);
 
-		int total=0;
-		for (CentreFormation c : disposition.keySet() ) {
-			total+=c.getNbEmployes();
-		}
-		return total;
-	}
-
-	public int getNb_Villes() {
-		int total=0;
-		for (List<Agence>l : disposition.values()){
-			total+=l.size();
-		}
-		return total;
-	}
-
-	public void calculerFitness() {
-		int nbcentres = disposition.keySet().size();
-		double coutFitness = nbcentres * Lieux.COUT_TOTAL;
-
-		for (Entry<CentreFormation, List<Agence>> entry : disposition.entrySet()) {
-
-			List<Agence> values = entry.getValue();
-
-			for (Agence agence : values) {
-				CentreFormation lieu = entry.getKey();
-				coutFitness+=Lieux.COUT_EMP*2*lieu.distance(agence);
-			}
-		}
-		this.fitness=coutFitness;
-	}
-	
-
-	public  Map<Integer, Agence> tirageAleatoireAgence(int indexCentre, int nbechanges) {
-
-		Map<Integer, Agence> agence= new HashMap<Integer, Agence>();
-
-		//on  prends les agences associées au centre de formation
-		List<Agence> agencesAssocieesAUnCentre = getValueForEntry(indexCentre);
-
-
-		if (agencesAssocieesAUnCentre != null) {
-			for ( int i=0;i<nbechanges;i++) {
-				Random villeRandom = new Random();
-				int indexVille = villeRandom.nextInt(agencesAssocieesAUnCentre.size());
-				Agence valeur = agencesAssocieesAUnCentre.get(indexVille);
-				agence.put(indexVille, valeur);
-			}
-			return agence;	
-		}
-		else {
-			return null;
-		}
+		return new Solution(dispositionSimpleClone, agencesDansLaSolutionClone, centresDansLaSolutionClone,carte);
 	}
 
 	@Override
@@ -173,96 +246,4 @@ public class Solution implements Comparable<Solution> {
 		return (int) (getFitness() - o.getFitness());
 	}
 
-	/**
-	 * conrtuit un voisin
-	 * consiste à échanger des villes entre centres
-	 * @return
-	 */
-	private Solution contruireVoisinAleatoire() {
-
-		Random random = new Random();
-		Solution aleatoire = new Solution();
-		aleatoire.setDisposition(disposition);
-
-		int tailleCentre= disposition.keySet().size();
-
-		//on choisit un centre de la solution au hasard
-		int indexCentre1= random.nextInt(tailleCentre);
-		//on en choisit une deuxieme
-		int indexCentre2 = random.nextInt(tailleCentre);
-
-		// tant que ce ne sont pas des centres différents on regénérère
-		while ( indexCentre1 == indexCentre2) {
-			indexCentre1= random.nextInt(tailleCentre);
-			indexCentre2= random.nextInt(tailleCentre);
-		}
-
-		list = new ArrayList<CentreFormation>(disposition.keySet());
-		CentreFormation c1 = getCentreFormationFromMap(indexCentre1);
-		CentreFormation c2 = getCentreFormationFromMap(indexCentre2);
-		//echange dans la solution aleatoire
-		aleatoire.echangerAgenceEntreCentreDeFormation(c1, c2);
-
-		//pour finir on calcul la nouvelle valeur de la fitness
-		aleatoire.calculerFitness();
-		return aleatoire;
-	}
-
-	private void echangerAgenceEntreCentreDeFormation(CentreFormation c1 ,CentreFormation c2) {
-
-		List<Agence> associeesAC1 = c1.getAgencesAssociees();
-		List<Agence> associeesAC2 = c2.getAgencesAssociees();
-		Random alea = new Random();
-		int indexVilleChoisie1 = alea.nextInt(associeesAC1.size());
-		int indexVilleChoisie2 = alea.nextInt(associeesAC2.size());
-
-		Agence duCentre1 = associeesAC1.get(indexVilleChoisie1);
-		Agence duCentre2 = associeesAC2.get(indexVilleChoisie2);
-
-		associeesAC1.set(indexVilleChoisie1, duCentre2);
-		associeesAC2.set(indexVilleChoisie2, duCentre1);
-
-		c1.setAgencesAssociees(associeesAC1);
-		c2.setAgencesAssociees(associeesAC2);
-
-		int testtaille = disposition.entrySet().size();
-		disposition.put(c1, associeesAC1);
-		disposition.put(c2, associeesAC2);
-		int testtaille2 = disposition.entrySet().size();
-
-		if (testtaille != testtaille2) {
-			System.out.println();
-			System.out.println();
-			System.out.println("*****************");
-			System.out.println("ERROR!!!!!!!!!!!");
-			System.out.println("*****************");
-			System.out.println();
-			System.out.println();
-
-		}
-	}
-
-	private CentreFormation getCentreFormationFromMap(int indexCentre) {
-		list = new ArrayList<CentreFormation>(disposition.keySet());
-		return list.get(indexCentre);
-	}
-
-	private Map<Integer, Agence> tirageAleatoireAgence(int indexCentre) {
-
-		Map<Integer, Agence> agence= new HashMap<Integer, Agence>();
-
-		//on  prends les agences associées au centre de formation
-		List<Agence> agencesAssocieesAUnCentre = getValueForEntry(indexCentre);
-
-		if (agencesAssocieesAUnCentre != null) {
-			Random villeRandom = new Random();
-			int indexVille = villeRandom.nextInt(agencesAssocieesAUnCentre.size());
-			Agence valeur = agencesAssocieesAUnCentre.get(indexVille);
-			agence.put(indexVille, valeur);
-			return agence;	
-		}
-		else {
-			return null;
-		}
-	}
 }

@@ -25,7 +25,7 @@ import Utils.Utilitaires;
 public class Population {
 
 	private List<Solution> populationDeSolutions;
-	private Solution meilleurSolution;
+	public Solution meilleurSolution;
 	private int taille;
 	private Random alea;
 	private Carte carte ;
@@ -40,7 +40,7 @@ public class Population {
 		populationDeSolutions = new ArrayList<Solution>();
 
 		for (int i=0; i<taille; i++) {
-			populationDeSolutions.add(Utilitaires.genererSolutionAleatoire());
+			populationDeSolutions.add(Utilitaires.genererUneSolutionSimple());
 		}
 
 		calculerMeilleurSolution();
@@ -57,18 +57,16 @@ public class Population {
 	public void croiser() {
 		int n = populationDeSolutions.size();
 		for (int i=0; i+2<=n; i += 2) {
-			/*populationDeSolutions.get(i)
-			.croisement(populationDeSolutions.get(i + 1));*/
+			populationDeSolutions.get(i)
+			.croisement(populationDeSolutions.get(i + 1));
 		}
 	}
 
 	public void mutation(int taille) {
-
 		for (int i=0; i<taille; i++) {
 			int index = alea.nextInt(populationDeSolutions.size());
-			CentreFormation c = carte.getListCentreFormation().remove(0);
-			CentreFormation sortant = populationDeSolutions.get(index).mutation(c);
-			carte.getListCentreFormation().add(sortant);
+			Solution solution = populationDeSolutions.get(index);
+			solution = solution.construireVoisinAleatoire();
 		}
 	}
 

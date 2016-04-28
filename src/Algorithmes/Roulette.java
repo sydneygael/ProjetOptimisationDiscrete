@@ -50,7 +50,7 @@ public class Roulette {
         List<Solution> nouvelleGeneration = new ArrayList<Solution>();
         
         for (int i=0; i< population.getTaille(); i++) {
-            Solution solution = tournerRoulette();
+        	Solution solution = tournerRoulette();
             nouvelleGeneration.add(solution);
         }
         

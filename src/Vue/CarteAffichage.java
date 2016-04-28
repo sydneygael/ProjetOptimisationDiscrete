@@ -7,13 +7,10 @@ package Vue;
 
 import Formation.Agence;
 import Formation.CentreFormation;
-import Utils.Utilitaires;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -21,36 +18,28 @@ import javax.swing.JFrame;
 /**
  *
  * @author Corentin
+ * Affiche l'image d'une carte de France et les lieux qui sont dessus (agences et centres de formation)
  */
 public class CarteAffichage  extends javax.swing.JPanel{
-    /**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	private ImageIcon image;
-    	private Map<CentreFormation, List<Agence>> disposition;
+        protected Map<Agence,CentreFormation> disposition;
     	
-    	public void initCarte(Map<CentreFormation, List<Agence>> listeLieux){
-            disposition=listeLieux;
-            image=new ImageIcon("Ressources/CarteFrance.PNG");
-
-            JFrame frame = new JFrame("Carte des Agences et Lieux de Formation");
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    frame.add(this);  
-                    frame.pack();
-                    frame.setBounds(0, 0, 673, 734); //Taille de l'image
-                    frame.setVisible(true);
-        }
-
+        
+    public void initCarte(Map<Agence,CentreFormation> listeLieux, JFrame frame){
+        disposition=listeLieux;
+        image=new ImageIcon("Ressources/CarteFrance.PNG");
+    }
     
-    public void setDisposition(Map<CentreFormation, List<Agence>> listeLieux){
+    public void setDisposition(Map<Agence,CentreFormation> listeLieux){
         disposition=listeLieux;
     }
     
-    
+    //Donne la position d'un point en pixels sur l'image (depuis les coordonnÈes GPS)
     public Point ajouterLieu(double latitude, double longitude){
-        //Coordonn√©es des latitudes/longitudes max et min de la carte
+        //Coordonnes des latitudes/longitudes max et min de la carte
         double minLat = 41.368564;  //Plus au Sud sur la carte
         double minLong = -5.2294;
         double maxLat = 51.720223;
@@ -74,61 +63,32 @@ public class CarteAffichage  extends javax.swing.JPanel{
     
     @Override
     public void paintComponent(Graphics g){
-    	
-        super.paintComponent(g);        
         g.drawImage(image.getImage(), 0, 0,  this);
-        
-        List<Color> colors=new ArrayList<Color>();
-        colors.add(Color.red);
-        colors.add(Color.BLUE);
-        colors.add(Color.BLACK);
-        colors.add(Color.YELLOW);
-        colors.add(Color.GREEN);
-        
-        
-        
-        Point p, pCentre;
-        
-            
-            for (Map.Entry<CentreFormation, List<Agence>> entry : disposition.entrySet()) {       
-                g.setColor(colors.get((int) (Math.random()*colors.size())));  //Choix d'une couleur al√©atoire*/
-                CentreFormation centre = entry.getKey();
-                pCentre=ajouterLieu(centre.getLatitude(),centre.getLongitude());
-                for(Agence agence : entry.getValue()){ 
-                    
-                    
-                    p=ajouterLieu(agence.getLatitude(),agence.getLongitude());
-                    System.out.println("Ville "+agence.getNom()+" de longitude "+agence.getLatitude()+" et de latitude "+agence.getLongitude());
-                    
-                    //g.setColor(Color.BLUE);
-                    g.drawRect(pCentre.x, pCentre.y, 10, 10);
-                    g.drawOval(p.x, p.y, 5,5);
-                    g.drawLine(p.x, p.y, pCentre.x, pCentre.y);
-                }
-        }
-            g.dispose();
-    }
-    
-    
-    
-        public static void main(String args[]) {
-         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try{
-                JFrame frame = new JFrame("Carte des Agences et Lieux de Formation");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                final CarteAffichage carte=new CarteAffichage();
-                frame.add(carte);
-                carte.setDisposition(Utilitaires.genererSolutionAleatoire().getDisposition());
-                
-                frame.pack();
-                frame.setBounds(0, 0, 673, 734);    //Taille de l'image
-                frame.setVisible(true);
 
-                }catch(Exception e){}
+        Point p, pCentre;
+        Agence agence; CentreFormation centre;
+            //On dessine un trait entre chaque agence et centre de formation
+            for (Map.Entry<Agence,CentreFormation> entry : disposition.entrySet()) {
+                agence = entry.getKey();
+                centre = entry.getValue();
+               //Chaque trait peut-Ítre noir/bleu/rouge selon le centre de formation. C'est plus lisible qu'avec une couleur uniforme
+                if(centre.getCodePostal().startsWith("0")||centre.getCodePostal().startsWith("1")||centre.getCodePostal().startsWith("2")){
+                                    g.setColor(Color.red);  
+                }
+                else if(centre.getCodePostal().startsWith("4")||centre.getCodePostal().startsWith("5")||centre.getCodePostal().startsWith("6")){
+                                    g.setColor(Color.blue);
+                }
+                  else{
+                    g.setColor(Color.black);
+                }
+                pCentre=ajouterLieu(centre.getLatitude(),centre.getLongitude());    //Cette fonction donne la position d'un lieu en pixels
+                p=ajouterLieu(agence.getLatitude(),agence.getLongitude());
+                    
+                g.drawRect(pCentre.x, pCentre.y, 10, 10);
+                g.drawOval(p.x, p.y, 5,5);
+                g.drawLine(p.x, p.y, pCentre.x, pCentre.y);
             }
-        });
     }
-}
+    }
 
 

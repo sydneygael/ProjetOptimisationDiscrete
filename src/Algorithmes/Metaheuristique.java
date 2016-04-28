@@ -10,14 +10,14 @@ public class Metaheuristique {
 	protected double mu;
 	protected double delta;
 	protected boolean accepter;
-	protected SolutionSimple s ;
-	protected SolutionSimple voisinAleatoire;
+	protected Solution s ;
+	protected Solution voisinAleatoire;
 	protected double meilleurCout;
-	protected SolutionSimple meilleurSolutionConnue;
+	protected Solution meilleurSolutionConnue;
 	protected double nbIterationsSansAmelioration;
 	protected double epsilon;
 	protected int nbVoisins;
 	protected Random r;
-	protected List<SolutionSimple> solutionsVoisines ;
+	protected List<Solution> solutionsVoisines ;
 
 }
