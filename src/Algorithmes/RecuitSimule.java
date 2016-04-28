@@ -1,6 +1,7 @@
 package Algorithmes;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -46,7 +47,8 @@ public class RecuitSimule extends Metaheuristique {
 			System.out.println(n);
 			//Tirer au sort une solution s’ dans V(s)
 			solutionsVoisines = s.genererVoisinage(nbVoisins);
-			voisinAleatoire= solutionsVoisines.get(r.nextInt(nbVoisins));
+			//voisinAleatoire= solutionsVoisines.get(r.nextInt(nbVoisins));
+			voisinAleatoire = Collections.min(solutionsVoisines);
 			
 			System.out.println();
 			System.out.println("------------------voisin aleatoire--------------------");

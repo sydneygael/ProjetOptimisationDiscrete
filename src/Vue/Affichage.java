@@ -23,9 +23,9 @@ public class Affichage extends javax.swing.JFrame {
         try {
             initComponents();
             
-             RecuitSimule simul = new RecuitSimule(100, 1000, 0.99, 0.0, 5);
-                //simul.run();
-                System.out.println("solution recuit fitness : "+simul.getMeilleurCout());
+             RecuitSimule simul = new RecuitSimule(1000, 1000, 0.99, 0.1, 10);
+             simul.run();
+             System.out.println("solution recuit fitness : "+simul.getMeilleurCout());
                    
             CarteAffichage vue = new CarteAffichage();
             vue.initCarte(simul.getMeilleurSolutionConnue().getDispositionSimple(),this);
@@ -151,7 +151,8 @@ public class Affichage extends javax.swing.JFrame {
     }                                           
 
     //Lance un nouveau recuit simulé et réinitialise la carte
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {       
+    	
         try {
             RecuitSimule simul = new RecuitSimule(Integer.getInteger(jTextField1.getText(),100), Double.valueOf(jTextField2.getText()),
                     Double.valueOf(jTextField3.getText()),Double.valueOf(jTextField4.getText()),5);
