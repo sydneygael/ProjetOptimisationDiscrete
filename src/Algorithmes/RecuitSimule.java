@@ -81,9 +81,9 @@ public class RecuitSimule extends Metaheuristique {
 
 			temperature=mu*temperature;
 		}
-		while (n<nbIterations);
-		/*while(temperature <= epsilon && n < nbIterations 
-				&& nbIterationsSansAmelioration<NB_ITER_SANS_CHANGEMENT);*/
+		
+		while( epsilon <= temperature && n < nbIterations 
+				&& nbIterationsSansAmelioration <NB_ITER_SANS_CHANGEMENT);
 
 	}
 

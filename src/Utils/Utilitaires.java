@@ -22,7 +22,7 @@ public class Utilitaires {
 
 	public static final String RESSOURCES_LIEUX_POSSIBLES = "Ressources/LieuxPossibles.txt";
 
-	public static final String RESSOURCES_LISTE_AGENCES = "Ressources/ListeAgences_100.txt";
+	public static final String RESSOURCES_LISTE_AGENCES = "Ressources/ListeAgences_300.txt";
 
 	public static Carte carte = new Carte();
 
@@ -75,6 +75,22 @@ public class Utilitaires {
 		s.setNbCentres(nbCentres);
 
 		return s;
+	}
+	
+	public static void afiicherSolution (Solution s) {
+		
+		System.out.println(" ------------affichage de la solution---------------");
+		for (CentreFormation c : s.centresDansLaSolution) {
+			
+			System.out.println(" agences associées aux centre : "+c.getId());
+			System.out.println();
+			List<Agence> list = c.getAgencesAssociees();
+			
+			for (Agence a: list) {
+				System.out.println(a.getId());
+			}
+			System.out.println();
+		}
 	}
 
 	public Random getRandom() {

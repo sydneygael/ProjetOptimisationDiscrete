@@ -3,6 +3,8 @@ package Algorithmes;
 import java.io.IOException;
 import java.util.Collections;
 
+import Utils.Utilitaires;
+
 public class AlogrithmeGenetique extends Metaheuristique {
 	private Population p;
 
@@ -31,6 +33,11 @@ public class AlogrithmeGenetique extends Metaheuristique {
 			}
 			System.out.println("generation : "+generation+ " meilleurCout de generation: " + min.getFitness());
 		}
+		System.out.println();
+		System.out.println();
+		System.out.println("meilleur Cout Algo génétique :" + meilleurCout);
+		
+		Utilitaires.afiicherSolution(meilleurSolutionConnue);
 	}
 
 

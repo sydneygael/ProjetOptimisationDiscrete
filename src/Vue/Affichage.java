@@ -21,11 +21,10 @@ import javax.swing.text.JTextComponent;
 /**
  *
  * @author Corentin
- * Affiche une fenêtre qui permet de lancer une solution de recuit simulé et affiche la carte correspondante (avec les lieux à montrer)
+ * Affiche une fenÃ¨tre qui permet de lancer une solution de recuit simulÃ© et affiche la carte correspondante (avec les lieux ï¿½ montrer)
  */
 public class Affichage extends javax.swing.JFrame {
 	private JTextField jTextField5;
-	private JLabel jLabel5;
 	/**
 	 * Creates new form Affichage
 	 */
@@ -33,7 +32,7 @@ public class Affichage extends javax.swing.JFrame {
 		try {
 			initComponents();
 
-			RecuitSimule simul = new RecuitSimule(1000, 1000, 0.99, 0.1, 10);
+			RecuitSimule simul = new RecuitSimule(10000, 1000, 0.99, 0.1, 10);
 			simul.run();
 			System.out.println("solution recuit fitness : "+simul.getMeilleurCout());
 
@@ -70,7 +69,6 @@ public class Affichage extends javax.swing.JFrame {
 		jLabel2 = new javax.swing.JLabel();
 		jLabel3 = new javax.swing.JLabel();
 		jLabel4 = new javax.swing.JLabel();
-		jLabel5 = new javax.swing.JLabel();
 		jButton1 = new javax.swing.JButton();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -85,7 +83,7 @@ public class Affichage extends javax.swing.JFrame {
 		});
 
 		jTextField2.setText("10000");
-		jTextField2.setName("nbItérations"); // NOI18N
+		jTextField2.setName("nbItï¿½rations"); // NOI18N
 
 		jTextField3.setText("0.99");
 		jTextField3.setName("mu"); // NOI18N
@@ -107,7 +105,6 @@ public class Affichage extends javax.swing.JFrame {
 
 		jLabel4.setText("Epsilon");
 		jLabel4.setName("Epsilon"); // NOI18N
-		jLabel5.setText("cout :");
 		
 		jButton1.setText("Lancer Recuit");
 		jButton1.setName("Lancer Recuit"); // NOI18N
@@ -128,7 +125,6 @@ public class Affichage extends javax.swing.JFrame {
 								.addComponent(jLabel4)
 								.addComponent(jLabel1)
 								.addComponent(jLabel2)
-								.addComponent(jLabel5)
 								.addComponent(jButton1)
 								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
 										.addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,14 +168,16 @@ public class Affichage extends javax.swing.JFrame {
 		// TODO add your handling code here:
 	}                                           
 
-	//Lance un nouveau recuit simulé et réinitialise la carte
+	//Lance un nouveau recuit simulÃ© et rï¿½initialise la carte
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {       
 
 		try {
+			initComponents();
 			RecuitSimule simul = new RecuitSimule(Integer.parseInt(jTextField1.getText()), Double.valueOf(jTextField2.getText()),
 					Double.valueOf(jTextField3.getText()),Double.valueOf(jTextField4.getText()),20);
 			simul.run();
 			System.out.println("solution recuit fitness : "+simul.getMeilleurCout());
+			jTextField5.setText(String.valueOf(simul.getMeilleurCout()));
 
 			CarteAffichage vue2 = new CarteAffichage();
 			vue2.initCarte(simul.getMeilleurSolutionConnue().getDispositionSimple(),this);
@@ -187,7 +185,7 @@ public class Affichage extends javax.swing.JFrame {
 			this.getContentPane().removeAll();
 			vue2.setBounds(0,0,1100,1100);
 
-			//initComponents();
+			
 			this.getContentPane().add(vue2);
 			this.pack();
 			this.revalidate();
